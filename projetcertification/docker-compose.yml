@@ -1,0 +1,45 @@
+services:
+  database:
+    image: mysql:8.2
+    container_name: mysql_laravel
+    volumes:
+      - volume_db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: projetcertification
+    ports:
+      - 8002:3306
+    networks:
+      - monreseau
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin_laravel
+    ports:
+      - 9000:80
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      PMA_HOST: database
+    networks:
+      - monreseau
+    depends_on:
+      - database
+  certif_docker:
+    build:
+      context: .
+      dockerfile: Docker/Dockerfile
+    container_name: certif_docker
+    restart: always
+    ports:
+      - "8003:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - phpmyadmin
+    networks:
+      - monreseau
+
+volumes:
+  volume_db:
+networks:
+  monreseau:
