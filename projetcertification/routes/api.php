@@ -46,14 +46,18 @@ Route::post('logout', [AuthController::class, 'logout']);
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
+
+
 //ajouter Categorie
 Route::post('categorie/create', [CategorieController::class, 'store']);
 //modifier categorie
 Route::put('categorie/edit/{id}', [CategorieController::class, 'update']);
-   //lister les categories
-   Route::get('categorie/lister', [CategorieController::class, 'index']);
-   //afficher un categorie
-   Route::get('categorie/detail/{id}', [CategorieController::class, 'show']);
+//lister les categories
+Route::get('categorie/lister', [CategorieController::class, 'index']);
+//afficher un categorie
+Route::get('categorie/detail/{id}', [CategorieController::class, 'show']);
+//supprimer un categorie
+Route::delete('categorie/supprimer/{id}', [CategorieController::class, 'destroy']);
 
 
 //ajouter Produit
