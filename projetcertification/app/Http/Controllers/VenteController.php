@@ -40,7 +40,7 @@ class VenteController extends Controller
     try {
       $vente = new Vente();
       $vente->quantité_vendu = $request->quantité_vendu;
-      $vente->montant_total = $request->montant_total;
+      $vente->montant_total = $request->montant* $request->quantité_vendu;
       $vente->produit_id = $request->produit_id;
       $vente->client_id = $request->client_id;
       $vente->user_id = $request->user_id;

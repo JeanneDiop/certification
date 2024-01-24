@@ -105,11 +105,22 @@ class CategorieController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
-    {
-      $categorie = Categorie::findOrFail($id);
+  {
+      try{
+        $categorie = Categorie::findOrFail($id);
 
-      $categorie->delete();
+        $categorie->delete();
+  
+        return response()->json([
+          'status_code' => 200,
+          'status_message' => 'categorie a été supprimé avec succés',
+          'data' => $categorie
+        ]);
 
-      return response('categorie  bien supprimé', 200);
+      }catch (Exception $e) {
+        return response()->json($e);
+
+      }
+     
   }
 }
