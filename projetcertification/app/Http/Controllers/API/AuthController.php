@@ -93,7 +93,7 @@ class AuthController extends Controller
     }
 
     public function register(CreateUserRequest $request)
-    {
+  {
       try {
         $user = new User();
         $user->nom = $request->nom;
@@ -114,6 +114,6 @@ class AuthController extends Controller
       } catch (Exception $e) {
         return response()->json($e);
       }
-    }
+  }
   
 }

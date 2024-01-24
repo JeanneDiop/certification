@@ -44,6 +44,7 @@ class ProduitController extends Controller
                 $produit->nom = $request->nom;
                 $produit->image = $request->image;
                 $produit->prixU = $request->prixU;
+                $produit->quantité=$request->quantité;
                 $produit->quantitéseuil = $request->quantitéseuil;
                 $produit->etat = $request->etat;
                 $produit->categorie_id = $request->categorie_id;
@@ -87,6 +88,7 @@ class ProduitController extends Controller
             $produit->nom = $request->nom;
             $produit->image = $request->image;
             $produit->prixU = $request->prixU;
+            $produit->quantité = $request->quantité;
             $produit->quantitéseuil = $request->quantitéseuil;
             $produit->etat = $request->etat;
             $produit->categorie_id = $request->categorie_id;

@@ -30,6 +30,7 @@ class CreateProduitRequest extends FormRequest
             'nom' => 'required|string|max:255',
             'image' => 'required|string',
             'prixU' => 'required|numeric',
+            'quantité' => 'required|numeric',
             'quantitéseuil' => 'required|numeric',
             'etat' => ['required', 'in:en stock,rupture,critique,en cours,terminé'], // Utilisation de 'in' pour le type enum
             'categorie_id' => 'required|integer',
@@ -42,6 +43,7 @@ class CreateProduitRequest extends FormRequest
             'nom.required' => 'Le champ nom est requis.',
             'image.required' => 'Le champ image est requis.',
             'prixU.numeric' => 'Le champ prixU doit être un nombre.',
+            'quantité.numeric' => 'Le champ quantité doit être un nombre.',
             'quantitéseuil.numeric' => 'Le champ quantitéseuil doit être un nombre.',
             'etat.in' => 'La valeur du champ état n\'est pas valide.',
             'categorie_id.integer' => 'Le champ categorie_id doit être un entier.'

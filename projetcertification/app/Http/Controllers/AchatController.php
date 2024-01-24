@@ -26,6 +26,7 @@ class AchatController extends Controller
         }
       }
 
+
     /**
      * Show the form for creating a new resource.
      */
@@ -35,7 +36,7 @@ class AchatController extends Controller
      */
     public function store(CreateAchatRequest $request)
     {
-        {
+        
             try {
               $achat = new Achat();
               $achat->prixachat= $request->prixachat;
@@ -49,7 +50,7 @@ class AchatController extends Controller
             } catch (Exception $e) {
               return response()->json($e);
             }
-          }
+          
     }
     /**
      * Display the specified resource.
@@ -85,7 +86,7 @@ class AchatController extends Controller
           return response()->json($e);
         }
       
-        }
+    }
     /**
      * Update the specified resource in storage.
      */
