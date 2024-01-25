@@ -5,11 +5,15 @@ namespace App\Http\Controllers\API;
 
 use Exception;
 use App\Models\User;
-use App\Http\Controllers\Controller;
-
-use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\CreateUserRequest;
 use openApi\Annotations as OA;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+
+
+use App\Http\Requests\User\EditUserRequest;
+use App\Http\Requests\User\CreateUserRequest;
+use App\Http\Requests\User\ArchiveUserRequest;
 
 
 
@@ -25,7 +29,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register', 'index']]);
+        $this->middleware('auth:api', ['except' => ['login','register', 'index','update','archiver']]);
     }
 
     /**
@@ -283,6 +287,38 @@ class AuthController extends Controller
       }
   }
 
+
+
+
+  /**
+ * @OA\Get(
+ *     path="/api/employees",
+ *     tags={"Utilisateurs"},
+ *     summary="Liste des employés avec le rôle_id égal à 2",
+ *     description="Récupère la liste de tous les employés ayant le rôle avec l'ID égal à 2.",
+ *     security={{"bearerAuth":{}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Liste des employés récupérée avec succès",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status_code", type="integer", description="Code de statut de la réponse"),
+ *             @OA\Property(property="status_message", type="string", description="Message de statut de la réponse"),
+ *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/User")),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Erreur lors de la récupération des employés",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status_code", type="integer", description="Code de statut de la réponse"),
+ *             @OA\Property(property="status_message", type="string", description="Message de statut de la réponse"),
+ *             @OA\Property(property="error", type="string", description="Message d'erreur détaillé"),
+ *         ),
+ *     ),
+ * )
+ */
   public function index()
 {
   try 
@@ -299,5 +335,130 @@ class AuthController extends Controller
 }
   
 }
- 
+
+
+
+
+/**
+ * @OA\Put(
+ *     path="/api/employees/{id}",
+ *     tags={"Utilisateurs"},
+ *     summary="Modifier un employé avec le rôle_id égal à 2",
+ *     description="Modifie un utilisateur ayant le rôle avec l'ID égal à 2.",
+ *     security={{"bearerAuth":{}}},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="ID de l'utilisateur à modifier",
+ *         @OA\Schema(type="integer"),
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="nom", type="string", description="Nouveau nom de l'utilisateur"),
+ *             @OA\Property(property="prenom", type="string", description="Nouveau prénom de l'utilisateur"),
+ *             @OA\Property(property="email", type="string", format="email", description="Nouvelle adresse e-mail de l'utilisateur"),
+ *             @OA\Property(property="password", type="string", description="Nouveau mot de passe de l'utilisateur"),
+ *             @OA\Property(property="telephone", type="string", description="Nouveau numéro de téléphone de l'utilisateur"),
+ *             @OA\Property(property="etat", type="string", description="Nouvel état de l'utilisateur"),
+ *             @OA\Property(property="adresse", type="string", description="Nouvelle adresse de l'utilisateur"),
+ *             @OA\Property(property="role_id", type="integer", description="Nouvel ID du rôle de l'utilisateur"),
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Utilisateur modifié avec succès",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status_code", type="integer", description="Code de statut de la réponse"),
+ *             @OA\Property(property="status_message", type="string", description="Message de statut de la réponse"),
+ *             @OA\Property(property="data", ref="#/components/schemas/User"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Utilisateur non trouvé",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status_code", type="integer", description="Code de statut de la réponse"),
+ *             @OA\Property(property="status_message", type="string", description="Message de statut de la réponse"),
+ *             @OA\Property(property="error", type="string", description="Message d'erreur indiquant que l'utilisateur n'a pas été trouvé"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Erreur lors de la modification de l'utilisateur",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status_code", type="integer", description="Code de statut de la réponse"),
+ *             @OA\Property(property="status_message", type="string", description="Message de statut de la réponse"),
+ *             @OA\Property(property="error", type="string", description="Message d'erreur détaillé"),
+ *         ),
+ *     ),
+ * )
+ */
+public function update(EditUserRequest $request, User $user)
+{
+    try {
+        if (auth()->user()->role_id == 1) {
+            // L'administrateur (role_id égal à 1) a le droit de modifier tous les comptes
+            $user->nom = $request->nom;
+            $user->prenom = $request->prenom;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->telephone = $request->telephone;
+            $user->adresse = $request->adresse;
+            $user->etat = $request->etat;
+            $user->role_id = $request->role_id;
+
+            $user->update();
+
+            return response()->json([
+                'status_code' => 200,
+                'status_message' => "Modification du compte enregistré",
+                'user' => $user
+            ]);
+        } else {
+            // Un utilisateur avec un role_id différent de 1 n'a pas le droit de modifier
+            return response()->json([
+                'status_code' => 403,
+                'status_message' => "Vous n'avez pas la permission de modifier cet utilisateur",
+            ]);
+        }
+    } catch (Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
+
+
+
+
+public function archiver(ArchiveUserRequest $request, User $user)
+{
+    try {
+        // Vérifier si l'utilisateur actuel a le droit de désactiver des comptes
+        if (auth()->user()->role_id == 1) {
+            // L'utilisateur actuel est un administrateur et peut désactiver des comptes
+            $user->etat = "inactif";
+            $user->update();
+    
+                return response()->json([
+                    'status_code' => 200,
+                    'status_message' => "La désactivation du compte a réussi"
+                ]);
+            } else {
+            // L'utilisateur actuel n'est pas autorisé à désactiver des comptes
+                return response()->json([
+                    'status_code' => 403,
+                    'status_message' => "Vous n'avez pas la permission de désactiver des comptes",
+                ]);
+            }
+        } catch (Exception $e) {
+            
+                return response()->json(['error' => $e->getMessage()], 500);
+        
+        }
+    }
+    
 }

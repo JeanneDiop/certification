@@ -49,10 +49,17 @@ Route::post('register', [AuthController::class, 'register']);
 
 
    //lister les employés
-   Route::get('employe/lister', [AuthController::class, 'index']);
+Route::get('employe/lister', [AuthController::class, 'index']);
+   //modifier employé
+Route::put('employe/edit/{id}', [AuthController::class, 'update']);
 
 
-Route::middleware(['auth:api','role_proprietaire'])->group(function() {  });
+Route::middleware(['auth:api','role_proprietaire'])->group(function() { 
+      //modifier employé
+Route::put('employe/edit/{id}', [AuthController::class, 'update']);
+ //pour achiver employé
+ Route::put('employe/archive/{id}', [AuthController::class, 'archiver']);
+ });
 
 Route::middleware(['auth:api','role_employe'])->group(function() {  });
 

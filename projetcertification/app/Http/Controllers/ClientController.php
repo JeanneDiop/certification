@@ -85,7 +85,7 @@ class ClientController extends Controller
         $client->code_client= $request->code_client;
         $client->telephone= $request->telephone;
         $client->adresse= $request->adresse;
-        $client->save();
+        $client->update();
     
           return response()->json([
             'status_code' => 200,
@@ -110,10 +110,23 @@ class ClientController extends Controller
      */
     public function destroy(string $id)
     {
+      try{
         $client = Client::findOrFail($id);
 
         $client->delete();
 
-        return response('client  bien supprimé', 200);
-    }
-}
+        return response()->json([
+          'status_code' => 200,
+          'status_message' => 'client a été bien supprimer',
+          'data' => $client
+        ]);
+      } catch (Exception $e) {
+        return response()->json($e);
+      }
+    
+      }
+  }
+      
+
+       
+    

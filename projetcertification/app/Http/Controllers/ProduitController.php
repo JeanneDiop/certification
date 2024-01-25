@@ -96,7 +96,7 @@ class ProduitController extends Controller
             $produit->quantitéseuil = $request->quantitéseuil;
             $produit->etat = $request->etat;
             $produit->categorie_id = $request->categorie_id;
-            $produit->save();
+            $produit->update();
 
             return response()->json([
                 'status_code' => 200,
