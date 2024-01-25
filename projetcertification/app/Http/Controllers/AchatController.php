@@ -113,75 +113,40 @@ class AchatController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(EditAchatRequest $request,$achat)
+    public function edit(EditAchatRequest $request, Achat $achat)
     {
          
-        // try {
-        //   $achat->prixachat=($request->prixunitaire*$request->quantite);
-        //   $achat->nomachat= $request->nomachat;
-        //   $achat->produit_id= $request->produit_id;
-        //   $produit=Produit::where('id',$request->produit_id)->first();
-        //   $produit->quantité +=$request->quantite;
-        //   if($achat->save()){
-        //     if($produit->update()){
-        //       return response()->json([
-        //         'status_code' => 200,
-        //         'status_message' => 'achat a été ajouté',
-        //         'data' => $achat
-        //       ]);
-        //     }else{
-        //       return response()->json([
-        //         'status_code' => 200,
-        //         'status_message' => 'produit a été ajouté',
-        //         'data' => $produit
-        //       ]);
-        //     }}
-        // } catch (Exception $e) {
-        //   return response()->json($e);
-        // }
+        try {
+       
+          $achat->prixachat=($request->prixunitaire*$request->quantite);
+        
+          $achat->nomachat= $request->nomachat;
+          $achat->produit_id= $request->produit_id;
+          $produit=Produit::where('id',$request->produit_id)->first();
+          $produit->quantité +=$request->quantite;
+          if($achat->save()){
+            if($produit->update()){
+              return response()->json([
+                'status_code' => 200,
+                'status_message' => 'achat a été ajouté',
+                'data' => $achat
+              ]);
+            }else{
+              return response()->json([
+                'status_code' => 200,
+                'status_message' => 'produit a été ajouté',
+                'data' => $produit
+              ]);
+            }}
+        } catch (Exception $e) {
+          return response()->json($e);
+        }
+      }
 
 
      
 
-   try {
-        $produit = Produit::find($request->produit_id);
-
-        if (!$produit) {
-            return response()->json([
-                'status_code' => 404,
-                'status_message' => 'Le produit n\'existe pas.',
-            ]);
-        }
-
-        // Mise à jour du produit
-        $produit->quantité += $request->quantite;
-        $produit->save();
-
-        // Mise à jour de l'achat
-        $achat->prixachat = $request->prixunitaire * $request->quantite;
-        $achat->nomachat = $request->nomachat;
-        $achat->produit_id = $request->produit_id;
-
-        if ($achat->update()) {
-            return response()->json([
-                'status_code' => 200,
-                'status_message' => 'L\'achat a été modifié.',
-                'data' => $achat,
-            ]);
-        } else {
-            return response()->json([
-                'status_code' => 500,
-                'status_message' => 'Erreur lors de la modification de l\'achat.',
-            ]);
-        }
-    } catch (Exception $e) {
-        return response()->json([
-            'status_code' => 500,
-            'status_message' => 'Erreur lors de la modification de l\'achat.',
-        ]);
-    }
-}
-
+   
       
     
     /**
@@ -191,14 +156,21 @@ class AchatController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Achat $achat)
     {
-        $produit = Achat::findOrFail($id);
+      try{
+        $achat->delete();
 
-        $produit->delete();
+        return response()->json([
+          'status_code' => 200,
+          'status_message' => 'achat a été bien supprimer',
+          'data' => $achat
+        ]);
+      } catch (Exception $e) {
+        return response()->json($e);
+      }
+    
+      }
 
-        
-        return response('achat  bien supprimé', 200);
-    }
+  }
 
-}

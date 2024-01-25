@@ -104,7 +104,7 @@ Route::post('achat/create', [AchatController::class, 'store']);
 //modifier  achat
  Route::put('achat/edit/{achat}', [AchatController::class, 'edit']);
 //supprimer  achat
-Route::delete('achat/supprimer/{id}', [AchatController::class, 'destroy']);
+Route::delete('achat/supprimer/{achat}', [AchatController::class, 'destroy']);
 //lister les achats
 Route::get('achat/lister', [AchatController::class, 'index']);
 //afficher achat

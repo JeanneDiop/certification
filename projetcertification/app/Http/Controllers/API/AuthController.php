@@ -431,7 +431,50 @@ public function update(EditUserRequest $request, User $user)
     }
 }
 
-
+/**
+ * @OA\Put(
+ *     path="/api/archiver/{id}",
+ *     tags={"Utilisateurs"},
+ *     summary="Désactiver un compte utilisateur",
+ *     description="Désactive le compte d'un utilisateur par un administrateur.",
+ *     security={{"bearerAuth":{}}},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="ID de l'utilisateur à désactiver",
+ *         @OA\Schema(type="integer"),
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Désactivation du compte réussie",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status_code", type="integer", description="Code de statut de la réponse"),
+ *             @OA\Property(property="status_message", type="string", description="Message de statut de la réponse"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="Permission refusée",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status_code", type="integer", description="Code de statut de la réponse"),
+ *             @OA\Property(property="status_message", type="string", description="Message de statut de la réponse"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Erreur lors de la désactivation du compte",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status_code", type="integer", description="Code de statut de la réponse"),
+ *             @OA\Property(property="status_message", type="string", description="Message de statut de la réponse"),
+ *             @OA\Property(property="error", type="string", description="Message d'erreur détaillé"),
+ *         ),
+ *     ),
+ * )
+ */
 
 
 public function archiver(User $user)

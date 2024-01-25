@@ -25,8 +25,6 @@ class EditAchatRequest extends FormRequest
     public function rules(): array
     { 
         return [
-           
-            'prixachat' => 'required|numeric', 
             'nomachat' => 'required|string', 
             'produit_id' => 'required|integer', 
            
