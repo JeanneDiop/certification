@@ -25,7 +25,7 @@ class EditProduitRequest extends FormRequest
     public function rules(): array
     { 
         return [
-            'nom' => 'required|string|max:255',
+            'nomproduit' => 'required|string|max:255',
             'image' => 'required|string',
             'prixU' => 'required|numeric',
             'quantité' => 'required|numeric',
@@ -38,7 +38,7 @@ class EditProduitRequest extends FormRequest
     public function messages()
     {
         return [
-       'nom.required' => 'Le champ nom est requis.',
+       'nomproduit.required' => 'Le champ nomproduit est requis.',
         'image.required' => 'Le champ image est requis.',
         'prixU.numeric' => 'Le champ prixU doit être un nombre.',
         'quantité.numeric' => 'Le champ quantité doit être un nombre.',

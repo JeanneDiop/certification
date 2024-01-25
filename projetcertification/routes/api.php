@@ -48,6 +48,15 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
 
+   //lister les employés
+   Route::get('employe/lister', [AuthController::class, 'index']);
+
+
+Route::middleware(['auth:api','role_proprietaire'])->group(function() {  });
+
+Route::middleware(['auth:api','role_employe'])->group(function() {  });
+
+
 //ajouter Categorie
 Route::post('categorie/create', [CategorieController::class, 'store']);
 //modifier categorie
@@ -87,24 +96,13 @@ Route::get('tarification/detail/{id}', [TarificationController::class, 'show']);
 //ajouter Achat
 Route::post('achat/create', [AchatController::class, 'store']);
 //modifier  achat
- Route::put('achat/edit/{id}', [AchatController::class, 'edit']);
+ Route::put('achat/edit/{achat}', [AchatController::class, 'edit']);
 //supprimer  achat
 Route::delete('achat/supprimer/{id}', [AchatController::class, 'destroy']);
 //lister les achats
 Route::get('achat/lister', [AchatController::class, 'index']);
 //afficher achat
 Route::get('achat/detail/{id}', [AchatController::class, 'show']);
-
-//ajouter Produit_Achat
-Route::post('produitachat/create', [ProduitAchatController::class, 'store']);
-//modifier  produitachat
- Route::put('produitachat/edit/{id}', [ProduitAchatController::class, 'edit']);
-// supprimer  produitachat
-// Route::delete('produitachat/supprimer/{id}', [ProduitAchatController::class, 'destroy']);
-//lister les produitachats
-Route::get('produitachat/lister', [ProduitAchatController::class, 'index']);
-//afficher produitachat
-Route::get('produitachat/detail/{id}', [ProduitAchatController::class, 'show']);
 
 
 //ajouter Vente

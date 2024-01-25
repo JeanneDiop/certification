@@ -9,8 +9,10 @@ class Achat extends Model
 {
     use HasFactory;
 
-    public function produitachat()
+   
+
+    public function produit()
     {
-        return $this->hasMany(Produit_Achat::class);
+        return $this->belongsTo(Produit::class, 'catagorie_id');
     }
 }

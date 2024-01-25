@@ -84,7 +84,8 @@ class CategorieController extends Controller
     {
         
             
-                try {
+                try 
+                {
                   $produit = Categorie::find($id);
                   $produit->nom = $request->nom;
                   $produit->save();

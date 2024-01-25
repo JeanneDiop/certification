@@ -45,7 +45,6 @@ class VenteController extends Controller
       $vente->client_id = $request->client_id;
       $vente->user_id = $request->user_id;
       $vente->save();
-
       return response()->json([
         'status_code' => 200,
         'status_message' => 'vente a été ajouté',

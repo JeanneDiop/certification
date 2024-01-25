@@ -38,8 +38,11 @@ class ProduitController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(CreateProduitRequest $request)
-    { {
-            try {
+    { 
+            try
+         {
+                
+
                 $produit = new Produit();
                 $produit->nom = $request->nom;
                 $produit->image = $request->image;
@@ -50,6 +53,7 @@ class ProduitController extends Controller
                 $produit->categorie_id = $request->categorie_id;
                 $produit->save();
 
+
                 return response()->json([
                     'status_code' => 200,
                     'status_message' => 'produit a été ajouté',
@@ -59,7 +63,7 @@ class ProduitController extends Controller
                 return response()->json($e);
             }
         }
-    }
+    
 
     /**
      * Display the specified resource.

@@ -19,4 +19,9 @@ class Produit extends Model
     {
         return $this->hasMany(Tarification::class);
     }
+
+    public function achat()
+    {
+        return $this->hasMany(Achat::class);
+    }
 }
