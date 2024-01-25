@@ -40,7 +40,7 @@ class EditClientRequest extends FormRequest
             'prenom.required' => 'Le champ prenom est requis.',
             'code_client.regex' => 'Le code client doit contenir des chiffres et des lettres uniquement.',
             'telephone.regex' => 'Le numéro de téléphone doit être au format sénégalais avec le préfixe +221 et suivi de 7chiffres.',
-            'adresse.required' => 'Le champ adresse est requis.',
+            'adresse.required' => 'Le champ adresse doit etre  requis.',
         ];
     }
     

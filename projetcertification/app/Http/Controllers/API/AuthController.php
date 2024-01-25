@@ -434,14 +434,15 @@ public function update(EditUserRequest $request, User $user)
 
 
 
-public function archiver(ArchiveUserRequest $request, User $user)
+public function archiver(User $user)
 {
     try {
         // Vérifier si l'utilisateur actuel a le droit de désactiver des comptes
         if (auth()->user()->role_id == 1) {
             // L'utilisateur actuel est un administrateur et peut désactiver des comptes
             $user->etat = "inactif";
-            $user->update();
+            $user->save();
+           
     
                 return response()->json([
                     'status_code' => 200,
