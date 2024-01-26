@@ -16,10 +16,10 @@ return new class extends Migration
     {
         Schema::create('ventes', function (Blueprint $table) {
             $table->id();
-            $table->string('quantité_vendu');
+            $table->string('quantite_vendu');
             $table->string('montant_total');
             $table->foreignIdFor(Produit::class)->constrained()->onDelete('cascade');
-            $table->foreignIdFor(Client::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(Client::class)->nullable()->constrained()->onDelete('cascade');
             $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
             
           

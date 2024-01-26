@@ -23,28 +23,28 @@ class EditProduitRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    { 
+    {
         return [
             'nomproduit' => 'required|string|max:255',
             'image' => 'required|string',
             'prixU' => 'required|numeric',
-            'quantité' => 'required|numeric',
-            'quantitéseuil' => 'required|numeric',
-            'etat' => ['required', 'in:en stock,rupture,critique,en cours,terminé'],
-            'categorie_id' => 'required',
+            'quantiteinitiale' => 'required|numeric',
+            'quantiteseuil' => 'required|numeric',
+            'etat' => ['required', 'in:en_stock,rupture,critique,en_cours,terminé'], // Utilisation de 'in' pour le type enum
+            'categorie_id' => 'required|integer',
         ];
     }
-
+    
     public function messages()
     {
         return [
-       'nomproduit.required' => 'Le champ nomproduit est requis.',
-        'image.required' => 'Le champ image est requis.',
-        'prixU.numeric' => 'Le champ prixU doit être un nombre.',
-        'quantité.numeric' => 'Le champ quantité doit être un nombre.',
-        'quantitéseuil.numeric' => 'Le champ quantité doit être un nombre.',
-        'etat.in' => 'La valeur du champ état n\'est pas valide.',
-        'categorie_id.integer' => 'Le champ categorie_id doit être un entier.'
+            'nomproduit.required' => 'Le champ nomproduit est requis.',
+            'image.required' => 'Le champ image est requis.',
+            'prixU.numeric' => 'Le champ prixU doit être un nombre.',
+            'quantiteinitiale.numeric' => 'Le champ quantiteinitiale doit être un nombre.',
+            'quantiteseuil.numeric' => 'Le champ quantiteseuil doit être un nombre.',
+            'etat.in' => 'La valeur du champ état n\'est pas valide.',
+            'categorie_id.integer' => 'Le champ categorie_id doit être un entier.'
         ];
     }
 

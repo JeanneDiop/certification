@@ -27,9 +27,31 @@ class AuthController extends Controller
      *
      * @return void
      */
+
+
+      /**
+     * Constructor function.
+     *
+     * @OA\Get(
+     *     path="/votre/chemin/d'authentification",
+     *     summary="Authentification requise",
+     *     description="Cette route nécessite une authentification pour accéder aux autres fonctionnalités de l'API.",
+     *     operationId="auth",
+     *     tags={"Authentification"},
+     *     security={{"api_key": {}}},
+     *     @OA\Response(
+     *         response=401,
+     *         description="Non autorisé. L'authentification est requise.",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Authentifié avec succès.",
+     *     )
+     * )
+     */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register', 'index','update','archiver']]);
+        $this->middleware('auth:api', ['except' => ['login','register', 'index','update','archiver','show']]);
     }
 
     /**
@@ -165,10 +187,7 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-
-
-
-
+    
      /**
  * @OA\Parameter(
  *     name="token",
@@ -287,9 +306,6 @@ class AuthController extends Controller
       }
   }
 
-
-
-
   /**
  * @OA\Get(
  *     path="/api/employees",
@@ -338,6 +354,16 @@ class AuthController extends Controller
 
 
 
+public function show(string $id)
+{
+    try {
+        $user = User::findOrFail($id);
+
+        return response()->json($user);
+    } catch (Exception) {
+        return response()->json(['message' => 'Désolé, pas de user trouvé.'], 404);
+    }
+}
 
 /**
  * @OA\Put(

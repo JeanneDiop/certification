@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Models\Facture;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class FactureController extends Controller
 {

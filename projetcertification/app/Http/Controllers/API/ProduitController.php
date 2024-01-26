@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use Exception;
 use App\Models\Produit;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Produit\EditProduitRequest;
 use App\Http\Requests\Produit\CreateProduitRequest;
 
@@ -40,11 +41,12 @@ class ProduitController extends Controller
                 
 
                 $produit = new Produit();
-                $produit->nom = $request->nom;
+                $produit->nomproduit = $request->nomproduit;
                 $produit->image = $request->image;
                 $produit->prixU = $request->prixU;
-                $produit->quantité=$request->quantité;
-                $produit->quantitéseuil = $request->quantitéseuil;
+                $produit->quantiteinitiale=$request->quantiteinitiale;
+                $produit->quantiterestante=$request->quantiteinitiale;
+                $produit->quantiteseuil = $request->quantiteseuil;
                 $produit->etat = $request->etat;
                 $produit->categorie_id = $request->categorie_id;
                 $produit->save();
@@ -80,16 +82,16 @@ class ProduitController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(EditProduitRequest $request, $id)
+    public function update(EditProduitRequest $request, $id)
     {
 
         try {
             $produit = Produit::find($id);
-            $produit->nom = $request->nom;
+            $produit->nomproduit = $request->nomproduit;
             $produit->image = $request->image;
             $produit->prixU = $request->prixU;
-            $produit->quantité = $request->quantité;
-            $produit->quantitéseuil = $request->quantitéseuil;
+            $produit->quantiteinitiale = $request->quantiteinitiale;
+            $produit->quantiteseuil = $request->quantiteseuil;
             $produit->etat = $request->etat;
             $produit->categorie_id = $request->categorie_id;
             $produit->update();
