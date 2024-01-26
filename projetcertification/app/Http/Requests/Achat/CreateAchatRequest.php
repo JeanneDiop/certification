@@ -26,6 +26,7 @@ class CreateAchatRequest extends FormRequest
     {
         return [
             'prixachat' => 'required|numeric', 
+            'quantiteachat' => 'required|numeric',
             'nomachat' => 'required|string', 
             'produit_id' => 'required|integer', 
         ];
@@ -34,6 +35,8 @@ class CreateAchatRequest extends FormRequest
     public function messages()
     {
         return [
+            'quantiteachat.required' => 'Le champ "quantiteachat" est obligatoire.',
+            'quantiteachat.numeric' => 'Le champ "quantiteachat" doit être un nombre (entier ou décimal).',
             'prixachat.required' => 'Le champ "Prix d\'achat" est obligatoire.',
             'prixachat.numeric' => 'Le champ "Prix d\'achat" doit être un nombre (entier ou décimal).',
             'nomachat.required' => 'Le champ "Nomachat" est obligatoire.',

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('nomachat');
             $table->integer('prixachat');
+            $table->integer('quantiteachat');
             $table->foreignIdFor(Produit::class)->constrained()->onDelete('cascade');
             $table->timestamps();
         });

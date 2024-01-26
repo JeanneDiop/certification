@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use Exception;
+use App\Models\User;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use openApi\Annotations as OA;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\EditClientRequest;
 use App\Http\Requests\Client\CreateClientRequest;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  
@@ -310,6 +312,31 @@ class ClientController extends Controller
       }
     
       }
+
+      public function redirigerWhatsApp($id)
+    {
+        try {
+            if (!is_numeric($id)) {
+                throw new Exception('L\'ID doit être numérique.');
+            }
+
+            $users = User::findOrFail($id);
+
+            $numeroOriginal = $users->telephone;
+
+            if (empty($numeroOriginal)) {
+                throw new Exception("Numéro de téléphone non valide. Numéro original : $numeroOriginal, Numéro nettoyé : $numeroOriginal");
+            }
+
+            $urlWhatsApp = "https://api.whatsapp.com/send?phone=$numeroOriginal";
+
+            return redirect()->to($urlWhatsApp);
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('whatsapp.userquincaillerie');
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
   }
       
 

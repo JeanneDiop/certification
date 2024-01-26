@@ -51,8 +51,8 @@ class VenteController extends Controller
             $client->adresse=$request->adresse;
           if($client->save()) {
                 $vente = new Vente();
-                $vente->quantite_vendu = $request->quantité_vendu;
-                $vente->montant_total = $request->montant* $request->quantite_vendu;
+                $vente->quantite_vendu = $request->quantite_vendu;
+                $vente->montant_total = $request->prixunitaire*$request->quantite_vendu;
                 $vente->produit_id = $request->produit_id;
                 $vente->client_id = $client->id;
                 $vente->user_id = auth()->user()->id;
@@ -125,15 +125,19 @@ class VenteController extends Controller
   public function update(EditVenteRequest $request, Vente $vente)
   {
 
+    // return response($request->all());
     try {
         $vente->quantite_vendu = $request->quantite_vendu;
-        $vente->montant_total = $request->montant_total* $request->quantite_vendu;
+        // $vente->montant_total = $request->montant_total * $request->quantite_vendu;
+        $vente->montant_total = $request->quantite_vendu;
+        // $vente->produit_id = $request->produit_id;
         $vente->produit_id = $request->produit_id;
         $vente->client_id = $request->client_id;
-        $vente->user_id = auth()->user()->id;
+        // $vente->user_id = auth()->user()->id;
+        $vente->user_id = $request->user_id;
         $produit=Produit::where('id',$request->produit_id)->first();
         $produit->quantiterestante =$produit->quantiteinitiale- $vente->quantite_vendu;
-        $produit->save();
+        // $produit->save();
         if($vente->update()){
          
           return response()->json([

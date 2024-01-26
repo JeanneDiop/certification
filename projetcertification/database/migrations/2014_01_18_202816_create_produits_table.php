@@ -17,8 +17,7 @@ return new class extends Migration
             $table->string('nomproduit');
             $table->string('image');
             $table->integer('prixU');
-            $table->integer('quantiteinitiale');
-            $table->integer('quantiterestante');
+            $table->integer('quantite');
             $table->integer('quantiteseuil');
             $table->enum('etat', ['en_stock', 'rupture','critique','en_cours','terminé'])->default('en_stock');
             $table->foreignIdFor(Categorie::class)->constrained()->cascadeOnDelete();

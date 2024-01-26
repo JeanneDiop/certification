@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Vente;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class EditVenteRequest extends FormRequest
 {
@@ -22,7 +24,7 @@ class EditVenteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'quantité_vendu' => 'required|numeric',
+            'quantite_vendu' => 'required|numeric',
             'montant_total' => 'required|numeric',
             'produit_id' => 'required|integer',
             'client_id' => 'required|integer',
@@ -33,11 +35,20 @@ class EditVenteRequest extends FormRequest
     public function messages()
     {
         return [
-            'quantité_vendu.numeric' => 'Le champ quantité vendue doit être un nombre.',
+            'quantite_vendu.numeric' => 'Le champ quantité vendue doit être un nombre.',
             'montant_total.numeric' => 'Le champ montant total doit être un nombre.',
             'produit_id.integer' => 'Le champ produit_id doit être un entier.',
             'client_id.integer' => 'Le champ client_id doit être un entier.',
             'user_id.integer' => 'Le champ user_id doit être un entier.',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        // Si la validation échoue, vous pouvez accéder aux erreurs
+        $errors = $validator->errors()->toArray();
+
+        // Retournez les erreurs dans la réponse JSON
+        throw new HttpResponseException(response()->json(['errors' => $errors]));
     }
 }

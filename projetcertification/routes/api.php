@@ -62,6 +62,8 @@ Route::put('employe/edit/{user}', [AuthController::class, 'update']);
 
 Route::middleware(['auth:api','role_employe'])->group(function() {  });
 
+Route::put('password/user', [AuthController::class, 'updatepassword']);
+
 
 //ajouter Categorie
 Route::post('categorie/create', [CategorieController::class, 'store']);
@@ -114,9 +116,7 @@ Route::get('achat/detail/{id}', [AchatController::class, 'show']);
 //ajouter Vente
 Route::post('vente/create', [VenteController::class, 'store']);
 //modifier  vente
- Route::put('vente/edit/{id}', [VenteController::class, 'update']);
-// //supprimer  vente
-// Route::delete('achat/supprimer/{id}', [VenteController::class, 'destroy']);
+ Route::put('vente/edit/{vente}', [VenteController::class, 'update']);
 //lister les ventes
 Route::get('vente/lister', [VenteController::class, 'index']);
 //afficher vente
@@ -157,3 +157,7 @@ Route::delete('facture/supprimer/{id}', [FactureController::class, 'destroy']);
 Route::get('facture/lister', [FactureController::class, 'index']);
 //afficher facture
 Route::get('facture/detail/{id}', [FactureController::class, 'show']);
+
+Route::post('whatsapp.userquincaillerie/{id}', [ClientController::class, 'redirigerWhatsApp']);
+
+

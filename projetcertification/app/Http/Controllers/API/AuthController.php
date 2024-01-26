@@ -5,12 +5,13 @@ namespace App\Http\Controllers\API;
 
 use Exception;
 use App\Models\User;
+use Illuminate\Http\Request;
+
 use openApi\Annotations as OA;
-
 use App\Http\Controllers\Controller;
+
+
 use Illuminate\Support\Facades\Hash;
-
-
 use App\Http\Requests\User\EditUserRequest;
 use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\ArchiveUserRequest;
@@ -61,6 +62,13 @@ class AuthController extends Controller
      */
 
 
+     public function updatepassword(Request $request,$id ){
+        if($request->password===$request->passwordconfirme){
+            $user=User::find($id);
+            $user->password=Hash::make($request->password);
+            $user->save();
+        }
+     }
      /**
  * @OA\Post(
  *     path="/api/login",

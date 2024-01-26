@@ -96,7 +96,7 @@ class AchatController extends Controller
     {
             try 
           {
-              if(isset($request->nomproduit)){
+              if(!isset($request->nomproduit)){
                 $produit= new Produit();
                 $produit->nomproduit=$request->nomproduit;
                 $produit->image=$request->image;
@@ -104,22 +104,25 @@ class AchatController extends Controller
                 $produit->etat=$request->etat;
                 $produit->quantiteseuil=$request->quantiteseuil;
                 $produit->quantite=$request->quantite;
-                if($produit->save()){
+                $produit->categorie_id=$request->categorie_id;
+                $produit->save();
+                
                 $achat = new Achat();
-                $achat->prixachat=($request->prixacha*$request->quantite);
+                $achat->prixachat=($request->prixU*$request->quantiteachat);
                 $achat->nomachat= $request->nomachat;
+                $achat->quantiteachat=$request->quantiteachat;
                 $achat->produit_id=$produit->Id;
                 $achat->save();
-    }
-               
-              }else{
+    }else{
                 $achat = new Achat();
+                
                 $achat=Achat::where('id',$request->produit_id)->first();
-                $achat->prixachat=($request->prixunitaire*$request->quantite);
+                $achat->prixachat=($request->prixU*$request->quantiteachat);
                 $achat->nomachat= $request->nomachat;
+                $achat->quantiteachat=$request->quantiteachat;
                 $achat->produit_id= $request->produit_id;
                 $produit=Produit::where('id',$request->produit_id)->first();
-                $produit->quantite +=$request->quantite;
+                $produit->quantite +=$request->quantiteachat;
                 if($achat->save()){
                   if($produit->update()){
                     return response()->json([
