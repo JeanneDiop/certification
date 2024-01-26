@@ -4,6 +4,7 @@ namespace App\Http\Requests\Vente;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class EditVenteRequest extends FormRequest
@@ -24,22 +25,26 @@ class EditVenteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'quantite_vendu' => 'required|numeric',
+           'quantite_vendu' => 'required|numeric',
             'montant_total' => 'required|numeric',
             'produit_id' => 'required|integer',
             'client_id' => 'required|integer',
-            'user_id' => 'required|integer',
+            // 'user_id' => 'required|integer',
         ];
     }
     
     public function messages()
     {
         return [
-            'quantite_vendu.numeric' => 'Le champ quantité vendue doit être un nombre.',
-            'montant_total.numeric' => 'Le champ montant total doit être un nombre.',
+            'quantite_vendu.required' => 'Le champ quantite_vendu est requis.',
+            'quantite_vendu.numeric' => 'Le champ quantite_vendu doit être un nombre.',
+            'montant_total.required' => 'Le champ montant_total est requis.',
+            'montant_total.numeric' => 'Le champ montant_total doit être un nombre.',
+            'produit_id.required' => 'Le champ produit_id est requis.',
             'produit_id.integer' => 'Le champ produit_id doit être un entier.',
+            'client_id.required' => 'Le champ client_id est requis.',
             'client_id.integer' => 'Le champ client_id doit être un entier.',
-            'user_id.integer' => 'Le champ user_id doit être un entier.',
+            // 'user_id.integer' => 'Le champ user_id doit être un entier.',
         ];
     }
 
@@ -49,6 +54,6 @@ class EditVenteRequest extends FormRequest
         $errors = $validator->errors()->toArray();
 
         // Retournez les erreurs dans la réponse JSON
-        throw new HttpResponseException(response()->json(['errors' => $errors]));
+        throw new HttpResponseException(response()->json(['errors' => $errors] ,JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
     }
 }

@@ -49,116 +49,119 @@ class VenteController extends Controller
             $client->code_client=$request->code_client;
             $client->telephone=$request->telephone;
             $client->adresse=$request->adresse;
-          if($client->save()) {
+            $client->save();
+            $vente = new Vente();             
+            $vente->quantite_vendu = $request->quantite_vendu;
+            $vente->montant_total = ($request->prixU*$request->quantite_vendu);
+            $vente->produit_id = $request->produit_id;
+            $vente->client_id = $client->id;
+            $vente->user_id = auth()->user()->id;
+            $vente->save();
+            return response()->json([
+                  'status_code' => 200,
+                  'status_message' => 'vente et client ont été bien ajouté',
+                  'client'=>$client,
+                  'produit'=> $vente,
+                ]);
+              }else{
                 $vente = new Vente();
+                $client= Client::where('id',$request->client_id)->first();         
                 $vente->quantite_vendu = $request->quantite_vendu;
-                $vente->montant_total = $request->prixunitaire*$request->quantite_vendu;
+                $vente->montant_total = ($request->prixU*$request->quantite_vendu);
                 $vente->produit_id = $request->produit_id;
                 $vente->client_id = $client->id;
                 $vente->user_id = auth()->user()->id;
-              if($vente->save()){
                 $produit=Produit::where('id',$request->produit_id)->first();
-                $produit->quantiterestante-=$vente->quantite_vendu;
-                $produit->save();
+                $produit->quantite -=$request->quantitevendu;
+                if($vente->save()){
+                if($produit->update()){
                 return response()->json([
-                  'status_code' => 200,
-                  'status_message' => 'vente a été ajouté',
-                  'data' => $vente
-                ]);
-              }else{
-                return response()->json([
-                  'status_code' => 200,
-                  'status_message' => 'enregistrement de vente est echoué',
-                  'data' => $vente
-                ]);
-              }
-             }else{
-              return response()->json([
                 'status_code' => 200,
-                'status_message' => 'enregistrement du client est echoué',
-                'data' => $client
-              ]);
-             }
-      }else{
-            $vente = new Vente();
-            $vente->quantite_vendu=$request->quantite_vendu;
-            $vente->montant_total = $request->montant_total* $request->quantite_vendu;
-            $vente->produit_id = $request->produit_id;
-            $vente->client_id = $request->client_id;
-            $vente->user_id = auth()->user()->id;
-            $produit=Produit::where('id',$request->produit_id)->first();
-            $produit->quantiterestante +=$request->quantite;
-            $vente->save();
-            $produit->save();
-        
-          }
-          return response()->json([
-            'status_code' => 200,
-            'status_message' => 'vente a été ajouté',
-            'data' => $vente
-          ]);
-        
+                'status_message' => 'vente et produit ont été bien mis à jour',
+                'achat' => $vente,
+                'produit' => $produit
+                ]);
+                }else{
+                return response()->json([
+                'status_code' => 500,
+                'status_message' => 'Échec de la mise à jour de l\'achat et du produit',
+                  ]);
+                 }
+                  }else {
+                  return response()->json([
+                  'status_code' => 404,
+                  'status_message' => 'Produit non trouvé',
+                  ], 404);
+                        }
+                        
+            }
+                } catch (Exception $e) {
+                return response()->json($e);
+                }
+  }
 
-    } catch (Exception $e) {
-      return response()->json($e->getMessage());
-    }
+public function show(string $id)
+{
+try {
+  $produit = Vente::findOrFail($id);
+
+  return response()->json($produit);
+} catch (Exception) {
+  return response()->json(['message' => 'Désolé, pas de produit trouvé.'], 404);
 }
+}
+
+/**
+* Show the form for editing the specified resource.
+*/
+
+
+
+
+
 
 
   /**
    * Display the specified resource.
    */
-  public function show(string $id)
-  {
-    try {
-      $vente = Vente::findOrFail($id);
 
-      return response()->json($vente);
-    } catch (Exception) {
-      return response()->json(['message' => 'Désolé, pas de vente trouvé.'], 404);
-    }
-  }
 
   /**
    * Show the form for editing the specified resource.
    */
   public function update(EditVenteRequest $request, Vente $vente)
   {
-
-    // return response($request->all());
-    try {
-        $vente->quantite_vendu = $request->quantite_vendu;
-        // $vente->montant_total = $request->montant_total * $request->quantite_vendu;
-        $vente->montant_total = $request->quantite_vendu;
-        // $vente->produit_id = $request->produit_id;
-        $vente->produit_id = $request->produit_id;
-        $vente->client_id = $request->client_id;
-        // $vente->user_id = auth()->user()->id;
-        $vente->user_id = $request->user_id;
-        $produit=Produit::where('id',$request->produit_id)->first();
-        $produit->quantiterestante =$produit->quantiteinitiale- $vente->quantite_vendu;
-        // $produit->save();
-        if($vente->update()){
-         
-          return response()->json([
-            'status_code' => 200,
-            'status_message' => 'vente a été modifié',
-            'data' => $vente
-          ]);
-        }else{
-          return response()->json([
-            'status_code'=>200,
-            'status_message' => ' la modification du vente a échoué',
-            'data' =>$vente
-          ]);
-        
-      
-        }
-     
-    } catch (Exception $e) {
-      return response()->json($e);
-    }
-}
+      try {
+          $vente->quantite_vendu = $request->quantite_vendu;
+          $vente->montant_total = $request->prixU * $request->quantite_vendu;
+          $vente->produit_id = $request->produit_id;
+          $vente->client_id = $request->client_id;
+          $vente->user_id = auth()->user()->id;
+  
+          $produit = Produit::where('id', $request->produit_id)->first();
+  
+          // Correction : Utiliser l'opérateur -= pour décrémenter la quantité
+          $produit->quantite -= $request->quantite_vendu;
+          $produit->save();
+  
+          if ($vente->update()) {
+              return response()->json([
+                  'status_code' => 200,
+                  'status_message' => 'Vente a été modifié',
+                  'data' => $vente,
+              ]);
+          } else {
+              return response()->json([
+                  'status_code' => 200,
+                  'status_message' => 'La modification de la vente a échoué',
+                  'data' => $vente,
+              ]);
+          }
+      } catch (Exception $e) {
+          return response()->json($e);
+      }
+  }
+  
   /**
    * Update the specified resource in storage.
    */
@@ -167,13 +170,6 @@ class VenteController extends Controller
   /**
    * Remove the specified resource from storage.
    */
-  // public function destroy(string $id)
-  // {
-  //     $vente = Vente::findOrFail($id);
 
-  //     $vente->delete();
-
-  //     return response('vente  bien supprimé', 200);
-  // }
 
 }

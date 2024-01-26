@@ -55,48 +55,48 @@ class AchatController extends Controller
     }
 
 
-    /**
-     * Show the form for creating a new resource.
-     */
+//     /**
+//      * Show the form for creating a new resource.
+//      */
 
-    /**
-     * Store a newly created resource in storage.
-     */
+//     /**
+//      * Store a newly created resource in storage.
+//      */
 
-     /**
- * @OA\Post(
- *      path="/api/achats",
- *      operationId="createAchat",
- *      tags={"Achats"},
- *      summary="Ajouter un nouvel achat",
- *      description="Ajoute un nouvel achat à la base de données",
- *      @OA\RequestBody(
- *          required=true,
- *          @OA\JsonContent(ref="#/components/schemas/CreateAchatRequest"),
- *      ),
- *      @OA\Response(
- *          response=200,
- *          description="Opération réussie",
- *          @OA\JsonContent(
- *              @OA\Property(property="status_code", type="integer", example=200),
- *              @OA\Property(property="status_message", type="string", example="Achat ajouté avec succès"),
- *              @OA\Property(property="data", type="object", ref="#/components/schemas/Achat"),
- *          ),
- *      ),
- *      @OA\Response(
- *          response=500,
- *          description="Erreur interne du serveur",
- *          @OA\JsonContent(
- *              @OA\Property(property="message", type="string", example="Internal Server Error"),
- *          ),
- *      ),
- * )
- */
+//      /**
+//  * @OA\Post(
+//  *      path="/api/achats",
+//  *      operationId="createAchat",
+//  *      tags={"Achats"},
+//  *      summary="Ajouter un nouvel achat",
+//  *      description="Ajoute un nouvel achat à la base de données",
+//  *      @OA\RequestBody(
+//  *          required=true,
+//  *          @OA\JsonContent(ref="#/components/schemas/CreateAchatRequest"),
+//  *      ),
+//  *      @OA\Response(
+//  *          response=200,
+//  *          description="Opération réussie",
+//  *          @OA\JsonContent(
+//  *              @OA\Property(property="status_code", type="integer", example=200),
+//  *              @OA\Property(property="status_message", type="string", example="Achat ajouté avec succès"),
+//  *              @OA\Property(property="data", type="object", ref="#/components/schemas/Achat"),
+//  *          ),
+//  *      ),
+//  *      @OA\Response(
+//  *          response=500,
+//  *          description="Erreur interne du serveur",
+//  *          @OA\JsonContent(
+//  *              @OA\Property(property="message", type="string", example="Internal Server Error"),
+//  *          ),
+//  *      ),
+//  * )
+//  */
     public function store(CreateAchatRequest $request)
     {
             try 
           {
-              if(!isset($request->nomproduit)){
+              if(isset($request->nomproduit)){
                 $produit= new Produit();
                 $produit->nomproduit=$request->nomproduit;
                 $produit->image=$request->image;
@@ -106,17 +106,20 @@ class AchatController extends Controller
                 $produit->quantite=$request->quantite;
                 $produit->categorie_id=$request->categorie_id;
                 $produit->save();
-                
                 $achat = new Achat();
                 $achat->prixachat=($request->prixU*$request->quantiteachat);
                 $achat->nomachat= $request->nomachat;
                 $achat->quantiteachat=$request->quantiteachat;
-                $achat->produit_id=$produit->Id;
+                $achat->produit_id=$produit->id;
                 $achat->save();
+                return response()->json([
+                  'status_code' => 200,
+                  'status_message' => 'achat et produit ont été bien ajouté',
+                  'achat'=>$achat,
+                  'produit'=> $produit
+                ]);
     }else{
                 $achat = new Achat();
-                
-                $achat=Achat::where('id',$request->produit_id)->first();
                 $achat->prixachat=($request->prixU*$request->quantiteachat);
                 $achat->nomachat= $request->nomachat;
                 $achat->quantiteachat=$request->quantiteachat;
@@ -127,28 +130,40 @@ class AchatController extends Controller
                   if($produit->update()){
                     return response()->json([
                       'status_code' => 200,
-                      'status_message' => 'achat a été ajouté',
-                      'data' => $achat
-                    ]);
+                      'status_message' => 'Achat et produit ont été bien mis à jour',
+                      'achat' => $achat,
+                      'produit' => $produit
+                  ]);
                   }else{
                     return response()->json([
-                      'status_code' => 200,
-                      'status_message' => 'produit a été ajouté',
-                      'data' => $produit
-                    ]);
-                  }
-                }else{
-                  return response()->json([
-                    'status_code' => 200,
-                    'status_message' => 'achat a été ajouté',
-                    'data' => $achat
+                      'status_code' => 500,
+                      'status_message' => 'Échec de la mise à jour de l\'achat et du produit',
+                      'achat' => $achat,
+                      'produit' => $produit
                   ]);
-                }
+                  }
+                }else {
+                  return response()->json([
+                      'status_code' => 404,
+                      'status_message' => 'Produit non trouvé',
+                      'achat' => $achat
+                  ], 404);
+              }
+  
             }
             } catch (Exception $e) {
               return response()->json($e);
-            }
-    }
+            } 
+          
+          }
+
+
+
+
+
+
+
+    
     /**
      * Display the specified resource.
      */
@@ -241,23 +256,23 @@ class AchatController extends Controller
          
         try {
        
-          $achat->prixachat=($request->prixunitaire*$request->quantite);
+          $achat->prixachat=($request->prixU*$request->quantite);
         
           $achat->nomachat= $request->nomachat;
           $achat->produit_id= $request->produit_id;
           $produit=Produit::where('id',$request->produit_id)->first();
-          $produit->quantité +=$request->quantite;
+          $produit->quantite +=$request->quantite;
           if($achat->save()){
             if($produit->update()){
               return response()->json([
                 'status_code' => 200,
-                'status_message' => 'achat a été ajouté',
+                'status_message' => 'achat a été modifier',
                 'data' => $achat
               ]);
             }else{
               return response()->json([
                 'status_code' => 200,
-                'status_message' => 'produit a été ajouté',
+                'status_message' => 'produit a été modifié',
                 'data' => $produit
               ]);
             }}
