@@ -138,9 +138,9 @@ Route::get('client/detail/{id}', [ClientController::class, 'show']);
 //ajouter payement
 Route::post('payement/create', [PayementController::class, 'store']);
 //modifier  payement
- Route::put('payement/edit/{id}', [PayementController::class, 'update']);
+ Route::put('payement/edit/{payement}', [PayementController::class, 'update']);
 //supprimer  payement
-Route::delete('payement/supprimer/{id}', [PayementController::class, 'destroy']);
+Route::delete('payement/supprimer/{payement}', [PayementController::class, 'destroy']);
 //lister les payements
 Route::get('payement/lister', [PayementController::class, 'index']);
 //afficher payement

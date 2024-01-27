@@ -40,37 +40,7 @@ class PayementController extends Controller
    * Store a newly created resource in storage.
    */
 
-  //  {
-  //     public function store(Request $request)
-  //     {
-  //         // Récupérer la vente associée
-  //         $vente = Vente::find($request->vente_id);
-
-  //         // Vérifier si la vente existe
-  //         if (!$vente) {
-  //             // Gérer le cas où la vente n'est pas trouvée
-  //         }
-
-  //         // Créer une nouvelle instance de Payement
-  //         $payement = new Payement;
-  //         $payement->vente_id = $request->vente_id;
-  //         $payement->montant_payement = $request->montant_payement;
-  //         $payement->etat = $request->etat;
-
-  //         // Si le statut est "comptant", définir le montant restant à 0
-  //         if ($request->etat === 'comptant') {
-  //             $payement->montant_restant = 0;
-  //         } else {
-  //             // Définir le montant restant en fonction de la logique acompte
-  //             $payement->montant_restant = $vente->montant_total - $request->montant_payement;
-  //         }
-
-  //         // Enregistrez le paiement
-  //         $payement->save();
-
-  //         // ... le reste du code
-  //     }
-  // }
+ 
   public function store(CreatePayementRequest $request)
   { 
        try {
@@ -115,43 +85,60 @@ class PayementController extends Controller
   /**
    * Show the form for editing the specified resource.
    */
-  public function edit(EditPayementRequest $request, $id)
-  {
 
-    try {
-      $payement = Payement::find($id);
-      $payement->vente_id = $request->vente_id;
-      $payement->montant_payement = $request->montant_payement;
-      $payement->montant_restant = $request->montant_restant;
-      $payement->statut = $request->statut;
-      $payement->save();
-
-      return response()->json([
-        'status_code' => 200,
-        'status_message' => 'achat a été modifié',
-        'data' => $payement
-      ]);
-    } catch (Exception $e) {
-      return response()->json($e);
-    }
-  }
   /**
    * Update the specified resource in storage.
    */
-  public function update(Request $request, Payement $payement)
-  {
-    //
-  }
-
-  /**
-   * Remove the specified resource from storage.
-   */
-  public function destroy(string $id)
-  {
-    $payement = Payement::findOrFail($id);
-
-    $payement->delete();
-
-    return response('achat  bien supprimé', 200);
-  }
+ 
+   public function update(EditPayementRequest $request, Payement $payement)
+   {
+       try {
+           // Récupérer la vente associée
+           $vente = $payement->vente;
+   
+           // Mettre à jour les champs du payement
+           $payement->montant_payement = $request->montant_payement;
+           $payement->etat = $request->etat;
+   
+           // Mettre à jour le montant_restant basé sur les nouvelles valeurs
+           if ($payement->etat == "comptant") {
+               $payement->montant_restant = 0;
+           } else {
+               $payement->montant_restant = $vente->montant_total - $request->montant_payement;
+           }
+   
+           // Sauvegarder les modifications du payement
+           $payement->save();
+   
+          //  // Mettre à jour les champs de la vente associée
+          //  $vente->save(); // Assurez-vous que votre modèle Vente est correctement défini pour la mise à jour.
+   
+           return response()->json([
+               'status_code' => 200,
+               'status_message' => 'Le payement a été mis à jour avec succès',
+               'data' => $payement
+           ]);
+       } catch (Exception $e) {
+           // Gérer d'autres exceptions ici si nécessaire
+           return response()->json(['error' => $e->getMessage()], 500);
+       }
+   
+       // Si nous sommes arrivés ici, le modèle n'a pas été trouvé
+       return response()->json(['error' => 'Le payement avec l\'ID spécifié n\'a pas été trouvé.'], 404);
+   }
+   
+   public function destroy(Payement $payement)
+   {
+     try{
+       $payement->delete();
+ 
+       return response()->json([
+         'status_code' => 200,
+         'status_message' => 'achat a été bien supprimer',
+         'data' => $payement
+       ]);
+     } catch (Exception $e) {
+       return response()->json($e);
+     }
+}
 }

@@ -28,8 +28,6 @@ class EditPayementRequest extends FormRequest
         return [
             'vente_id' => 'required|string',
             'montant_payement' => 'required|numeric',
-            'montant_restant' => 'required|numeric',
-            'statut' => ['required', Rule::in(['comptant', 'acompte'])],
         ];
     }
     
@@ -39,10 +37,6 @@ class EditPayementRequest extends FormRequest
             'vente_id.required' => 'Le champ vente_id est requis.',
             'montant_payement.required' => 'Le champ montant payement est requis.',
             'montant_payement.numeric' => 'Le champ montant payement doit être un nombre.',
-            'montant_restant.required' => 'Le champ montant restant est requis.',
-            'montant_restant.numeric' => 'Le champ montant restant doit être un nombre.',
-            'statut.required' => 'Le champ statut est requis.',
-            'statut.in' => 'Le champ statut doit être soit "comptant" soit "acompte".',
         ];
     }
     protected function failedValidation(Validator $validator)
