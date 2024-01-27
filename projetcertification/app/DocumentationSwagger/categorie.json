@@ -1,18 +1,18 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "endpointProduit",
+        "title": "endpointCategorie",
         "version": "0.1"
     },
     "paths": {
-        "/api/produits": {
+        "/api/categories": {
             "get": {
                 "tags": [
-                    "Produits"
+                    "Categories"
                 ],
-                "summary": "Obtenir la liste de tous les produits",
-                "description": "Retourne la liste de tous les produits.",
-                "operationId": "getProduits",
+                "summary": "Obtenir la liste de toutes les catégories",
+                "description": "Retourne la liste de toutes les catégories",
+                "operationId": "getCategories",
                 "responses": {
                     "200": {
                         "description": "Opération réussie",
@@ -26,12 +26,12 @@
                                         },
                                         "status_message": {
                                             "type": "string",
-                                            "example": "Tous les produits ont été récupérés"
+                                            "example": "Toutes les catégories ont été récupérées"
                                         },
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/Produit"
+                                                "$ref": "#/components/schemas/Categorie"
                                             }
                                         }
                                     },
@@ -60,18 +60,18 @@
             },
             "post": {
                 "tags": [
-                    "Produits"
+                    "Categories"
                 ],
-                "summary": "Créer un nouveau produit",
-                "description": "Crée un nouveau produit avec les données fournies dans la requête.",
-                "operationId": "createProduit",
+                "summary": "Créer une nouvelle catégorie",
+                "description": "Crée une nouvelle catégorie avec les données fournies dans la requête.",
+                "operationId": "createCategorie",
                 "requestBody": {
-                    "description": "Données du produit à créer",
+                    "description": "Données de la catégorie à créer",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/CreateProduitRequest"
+                                "$ref": "#/components/schemas/CreateCategorieRequest"
                             }
                         }
                     }
@@ -89,10 +89,10 @@
                                         },
                                         "status_message": {
                                             "type": "string",
-                                            "example": "Produit ajouté avec succès"
+                                            "example": "Catégorie ajoutée avec succès"
                                         },
                                         "data": {
-                                            "$ref": "#/components/schemas/Produit"
+                                            "$ref": "#/components/schemas/Categorie"
                                         }
                                     },
                                     "type": "object"
@@ -119,19 +119,19 @@
                 }
             }
         },
-        "/api/produits/{id}": {
+        "/api/categories/{id}": {
             "get": {
                 "tags": [
-                    "Produits"
+                    "Categories"
                 ],
-                "summary": "Obtenir un produit par ID",
-                "description": "Retourne un produit spécifié par son identifiant.",
-                "operationId": "getProduitById",
+                "summary": "Obtenir une catégorie par ID",
+                "description": "Retourne une catégorie spécifiée par son identifiant.",
+                "operationId": "getCategorieById",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID du produit",
+                        "description": "ID de la catégorie",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -144,20 +144,20 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Produit"
+                                    "$ref": "#/components/schemas/Categorie"
                                 }
                             }
                         }
                     },
                     "404": {
-                        "description": "Produit non trouvé",
+                        "description": "Catégorie non trouvée",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Désolé, pas de produit trouvé."
+                                            "example": "Désolé, pas de catégorie trouvée."
                                         }
                                     },
                                     "type": "object"
@@ -185,16 +185,16 @@
             },
             "put": {
                 "tags": [
-                    "Produits"
+                    "Categories"
                 ],
-                "summary": "Modifier un produit par ID",
-                "description": "Modifie un produit spécifié par son identifiant avec les données fournies dans la requête.",
-                "operationId": "updateProduit",
+                "summary": "Modifier une catégorie par ID",
+                "description": "Modifie une catégorie spécifiée par son identifiant avec les données fournies dans la requête.",
+                "operationId": "updateCategorie",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID du produit",
+                        "description": "ID de la catégorie",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -202,12 +202,12 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Données du produit à modifier",
+                    "description": "Données de la catégorie à modifier",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/EditProduitRequest"
+                                "$ref": "#/components/schemas/EditCategorieRequest"
                             }
                         }
                     }
@@ -225,10 +225,10 @@
                                         },
                                         "status_message": {
                                             "type": "string",
-                                            "example": "Produit modifié avec succès"
+                                            "example": "Catégorie modifiée avec succès"
                                         },
                                         "data": {
-                                            "$ref": "#/components/schemas/Produit"
+                                            "$ref": "#/components/schemas/Categorie"
                                         }
                                     },
                                     "type": "object"
@@ -237,14 +237,14 @@
                         }
                     },
                     "404": {
-                        "description": "Produit non trouvé",
+                        "description": "Catégorie non trouvée",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Le produit avec l'ID spécifié n'a pas été trouvé."
+                                            "example": "Désolé, pas de catégorie trouvée."
                                         }
                                     },
                                     "type": "object"
@@ -272,16 +272,16 @@
             },
             "delete": {
                 "tags": [
-                    "Produits"
+                    "Categories"
                 ],
-                "summary": "Supprimer un produit par ID",
-                "description": "Supprime un produit spécifié par son identifiant.",
-                "operationId": "deleteProduit",
+                "summary": "Supprimer une catégorie par ID",
+                "description": "Supprime une catégorie spécifiée par son identifiant.",
+                "operationId": "deleteCategorie",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID du produit",
+                        "description": "ID de la catégorie",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -301,10 +301,10 @@
                                         },
                                         "status_message": {
                                             "type": "string",
-                                            "example": "Produit supprimé avec succès"
+                                            "example": "Catégorie supprimée avec succès"
                                         },
                                         "data": {
-                                            "$ref": "#/components/schemas/Produit"
+                                            "$ref": "#/components/schemas/Categorie"
                                         }
                                     },
                                     "type": "object"
@@ -313,14 +313,14 @@
                         }
                     },
                     "404": {
-                        "description": "Produit non trouvé",
+                        "description": "Catégorie non trouvée",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Le produit avec l'ID spécifié n'a pas été trouvé."
+                                            "example": "Désolé, pas de catégorie trouvée."
                                         }
                                     },
                                     "type": "object"

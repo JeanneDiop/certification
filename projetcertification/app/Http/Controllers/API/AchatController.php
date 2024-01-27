@@ -9,7 +9,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Achat\EditAchatRequest;
 use App\Http\Requests\Achat\CreateAchatRequest;
+use openApi\Annotations as OA;
 
+
+/**
+ 
+*@OA\Info(title="endpointCandidature", version="0.1")*/
 class AchatController extends Controller
 {
     /**

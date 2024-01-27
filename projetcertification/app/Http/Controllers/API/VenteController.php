@@ -10,12 +10,47 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Vente\EditVenteRequest;
 use App\Http\Requests\Vente\CreateVenteRequest;
-
+use openApi\Annotations as OA;
+/**
+ 
+*@OA\Info(title="endpointCandidature", version="0.1")*/
 class VenteController extends Controller
 {
   /**
    * Display a listing of the resource.
    */
+
+   /**
+ * @OA\Get(
+ *      path="/api/ventes",
+ *      operationId="getVentes",
+ *      tags={"Ventes"},
+ *      summary="Obtenir la liste de toutes les ventes",
+ *      description="Retourne la liste de toutes les ventes.",
+ *      @OA\Response(
+ *          response=200,
+ *          description="Opération réussie",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status_code", type="integer", example=200),
+ *              @OA\Property(property="status_message", type="string", example="Toutes les ventes ont été récupérées"),
+ *              @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Vente")),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=500,
+ *          description="Erreur interne du serveur",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Internal Server Error"),
+ *          ),
+ *      ),
+ * )
+ *
+ * Obtient la liste de toutes les ventes.
+ *
+ * Cette fonction retourne la liste de toutes les ventes.
+ *
+ * @return \Illuminate\Http\JsonResponse
+ */
   public function index()
   {
     try {
@@ -37,6 +72,54 @@ class VenteController extends Controller
   /**
    * Store a newly created resource in storage.
    */
+
+   /**
+ * @OA\Post(
+ *      path="/api/ventes",
+ *      operationId="createVente",
+ *      tags={"Ventes"},
+ *      summary="Créer une nouvelle vente",
+ *      description="Enregistre une nouvelle vente avec les informations fournies dans la requête.",
+ *      @OA\RequestBody(
+ *          required=true,
+ *          description="Données de la vente à créer",
+ *          @OA\JsonContent(ref="#/components/schemas/CreateVenteRequest")
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Opération réussie",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status_code", type="integer", example=200),
+ *              @OA\Property(property="status_message", type="string", example="Vente ajoutée avec succès et produit mis à jour"),
+ *              @OA\Property(property="vente", ref="#/components/schemas/Vente"),
+ *              @OA\Property(property="produit", ref="#/components/schemas/Produit"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Client ou produit non trouvé",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status_code", type="integer", example=404),
+ *              @OA\Property(property="status_message", type="string", example="Client ou produit non trouvé"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=500,
+ *          description="Erreur interne du serveur",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status_code", type="integer", example=500),
+ *              @OA\Property(property="status_message", type="string", example="Échec de la mise à jour de la vente ou du produit"),
+ *          ),
+ *      ),
+ * )
+ *
+ * Crée une nouvelle vente.
+ *
+ * Cette fonction enregistre une nouvelle vente avec les informations fournies dans la requête. Elle met également à jour la quantité du produit vendu.
+ *
+ * @param  \App\Http\Requests\CreateVenteRequest  $request
+ * @return \Illuminate\Http\JsonResponse
+ */
   public function store(CreateVenteRequest $request)
   {
 
@@ -91,10 +174,67 @@ class VenteController extends Controller
       ]);
     }
   }
-  public function update(Request $request, $id)
+
+  /**
+ * @OA\Put(
+ *      path="/api/ventes/{vente}",
+ *      operationId="updateVente",
+ *      tags={"Ventes"},
+ *      summary="Mettre à jour une vente existante",
+ *      description="Met à jour une vente existante avec les informations fournies dans la requête.",
+ *      @OA\Parameter(
+ *          name="vente",
+ *          in="path",
+ *          required=true,
+ *          description="ID de la vente à mettre à jour",
+ *          @OA\Schema(type="integer")
+ *      ),
+ *      @OA\RequestBody(
+ *          required=true,
+ *          description="Données de la vente à mettre à jour",
+ *          @OA\JsonContent(ref="#/components/schemas/EditVenteRequest")
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Opération réussie",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status_code", type="integer", example=200),
+ *              @OA\Property(property="status_message", type="string", example="Vente mise à jour avec succès"),
+ *              @OA\Property(property="vente", ref="#/components/schemas/Vente"),
+ *              @OA\Property(property="produit", ref="#/components/schemas/Produit"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Vente, client ou produit non trouvé",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status_code", type="integer", example=404),
+ *              @OA\Property(property="status_message", type="string", example="Vente, client ou produit non trouvé"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=500,
+ *          description="Erreur interne du serveur",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status_code", type="integer", example=500),
+ *              @OA\Property(property="status_message", type="string", example="Échec de la mise à jour de la vente ou du produit"),
+ *          ),
+ *      ),
+ * )
+ *
+ * Met à jour une vente existante.
+ *
+ * Cette fonction met à jour une vente existante avec les informations fournies dans la requête. Elle ajuste également la quantité du produit vendu en conséquence.
+ *
+ * @param  \App\Http\Requests\EditVenteRequest  $request
+ * @param  \App\Models\Vente  $vente
+ * @return \Illuminate\Http\JsonResponse
+ */
+
+  public function update(EditVenteRequest $request, Vente $vente)
   {
     try {
-      $vente = Vente::find($id);
+      $vente = Vente::find($vente);
 
       if (!$vente) {
         return response()->json([
