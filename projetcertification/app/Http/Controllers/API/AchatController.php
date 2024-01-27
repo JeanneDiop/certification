@@ -131,7 +131,7 @@ class AchatController extends Controller
                 if($produit->update()){
                     return response()->json([
                       'status_code' => 200,
-                      'status_message' => 'Achat et produit ont été bien mis à jour',
+                      'status_message' => 'Achat et produit ont été bien ajouté',
                       'achat' => $achat,
                       'produit' => $produit
                   ]);
@@ -258,8 +258,9 @@ class AchatController extends Controller
         try {
        
           $achat->montantachat=($request->prixachat*$request->quantiteachat);
-        
           $achat->nomachat= $request->nomachat;
+          $achat->prixachat= $request->prixachat;
+          $achat->quantiteachat=$request->quantiteachat;
           $achat->produit_id= $request->produit_id;
           $produit=Produit::where('id',$request->produit_id)->first();
           $produit->quantite +=$request->quantiteachat;

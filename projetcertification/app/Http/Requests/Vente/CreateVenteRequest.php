@@ -26,7 +26,7 @@ class CreateVenteRequest extends FormRequest
     {
         return [
             'quantite_vendu' => 'required|numeric',
-            'montant_total' => 'required|numeric',
+   
             'produit_id' => 'required|integer',
             'client_id' => 'required|integer',
             // 'user_id' => 'required|integer',
@@ -37,7 +37,7 @@ class CreateVenteRequest extends FormRequest
     {
         return [
             'quantite_vendu.numeric' => 'Le champ quantite_vendu doit être un nombre.',
-            'montant_total.numeric' => 'Le champ montant_total doit être un nombre.',
+           
             'produit_id.integer' => 'Le champ produit_id doit être un entier.',
             'client_id.integer' => 'Le champ client_id doit être un entier.',
             // 'user_id.integer' => 'Le champ user_id doit être un entier.',
