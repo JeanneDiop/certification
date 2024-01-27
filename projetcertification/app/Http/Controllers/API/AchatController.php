@@ -256,12 +256,12 @@ class AchatController extends Controller
          
         try {
        
-          $achat->prixachat=($request->prixU*$request->quantite);
+          $achat->prixachat=($request->prixU*$request->quantiteachat);
         
           $achat->nomachat= $request->nomachat;
           $achat->produit_id= $request->produit_id;
           $produit=Produit::where('id',$request->produit_id)->first();
-          $produit->quantite +=$request->quantite;
+          $produit->quantite +=$request->quantiteachat;
           if($achat->save()){
             if($produit->update()){
               return response()->json([
