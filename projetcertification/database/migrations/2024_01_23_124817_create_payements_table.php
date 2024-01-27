@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('vente_id');
             $table->string('montant_payement');
-            $table->string('montant_restant')->default('0');
+            $table->string('montant_restant');
             $table->enum('etat', ['acompte', 'comptant'])->default('comptant');
             $table->timestamps();
         });
