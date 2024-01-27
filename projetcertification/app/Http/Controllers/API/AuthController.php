@@ -517,7 +517,7 @@ public function archiver(User $user)
         // Vérifier si l'utilisateur actuel a le droit de désactiver des comptes
         if (auth()->user()->role_id == 1) {
             // L'utilisateur actuel est un administrateur et peut désactiver des comptes
-           if( $user->etat = "actif"){
+           if( $user->etat == "actif"){
             $user->etat = "inactif";
             $user->save();
            }else{
