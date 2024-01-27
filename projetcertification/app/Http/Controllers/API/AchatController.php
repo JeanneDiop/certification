@@ -96,38 +96,39 @@ class AchatController extends Controller
     {
             try 
           {
-              if(isset($request->nomproduit)){
-                $produit= new Produit();
-                $produit->nomproduit=$request->nomproduit;
-                $produit->image=$request->image;
-                $produit->prixU=$request->prixU;
-                $produit->etat=$request->etat;
-                $produit->quantiteseuil=$request->quantiteseuil;
-                $produit->quantite=$request->quantite;
-                $produit->categorie_id=$request->categorie_id;
-                $produit->save();
+          
+                // $produit= new Produit();
+                // $produit->nomproduit=$request->nomproduit;
+                // $produit->image=$request->image;
+                // $produit->prixU=$request->prixU;
+                // $produit->etat=$request->etat;
+                // $produit->quantiteseuil=$request->quantiteseuil;
+                // $produit->quantite=$request->quantite;
+                // $produit->categorie_id=$request->categorie_id;
+                // $produit->save();
+                // $achat = new Achat();
+                // $achat->montantachat=($request->prixachat*$request->quantiteachat);
+                // $achat->nomachat= $request->nomachat;
+                // $achat->quantiteachat=$request->quantiteachat;
+                // $achat->produit_id=$request->produit->id;
+                // $achat->save();
+                // return response()->json([
+                //   'status_code' => 200,
+                //   'status_message' => 'achat et produit ont été bien ajouté',
+                //   'achat'=>$achat,
+                 
+                // ]);
+    
                 $achat = new Achat();
-                $achat->prixachat=($request->prixU*$request->quantiteachat);
+                $achat->montantachat=($request->prixachat*$request->quantiteachat);
                 $achat->nomachat= $request->nomachat;
-                $achat->quantiteachat=$request->quantiteachat;
-                $achat->produit_id=$produit->id;
-                $achat->save();
-                return response()->json([
-                  'status_code' => 200,
-                  'status_message' => 'achat et produit ont été bien ajouté',
-                  'achat'=>$achat,
-                  'produit'=> $produit
-                ]);
-    }else{
-                $achat = new Achat();
-                $achat->prixachat=($request->prixU*$request->quantiteachat);
-                $achat->nomachat= $request->nomachat;
+                $achat->prixachat= $request->prixachat;
                 $achat->quantiteachat=$request->quantiteachat;
                 $achat->produit_id= $request->produit_id;
                 $produit=Produit::where('id',$request->produit_id)->first();
                 $produit->quantite +=$request->quantiteachat;
                 if($achat->save()){
-                  if($produit->update()){
+                if($produit->update()){
                     return response()->json([
                       'status_code' => 200,
                       'status_message' => 'Achat et produit ont été bien mis à jour',
@@ -150,7 +151,7 @@ class AchatController extends Controller
                   ], 404);
               }
   
-            }
+            
             } catch (Exception $e) {
               return response()->json($e);
             } 
@@ -256,7 +257,7 @@ class AchatController extends Controller
          
         try {
        
-          $achat->prixachat=($request->prixU*$request->quantiteachat);
+          $achat->montantachat=($request->prixachat*$request->quantiteachat);
         
           $achat->nomachat= $request->nomachat;
           $achat->produit_id= $request->produit_id;

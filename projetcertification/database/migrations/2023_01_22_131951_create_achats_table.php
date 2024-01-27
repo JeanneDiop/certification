@@ -15,7 +15,8 @@ return new class extends Migration
         Schema::create('achats', function (Blueprint $table) {
             $table->id();
             $table->string('nomachat');
-            $table->integer('prixachat');
+            $table->string('prixachat');
+            $table->string('montantachat')->default('0');
             $table->integer('quantiteachat');
             $table->foreignIdFor(Produit::class)->constrained()->onDelete('cascade');
             $table->timestamps();
