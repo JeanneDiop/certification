@@ -144,7 +144,7 @@ Route::delete('payement/supprimer/{payement}', [PayementController::class, 'dest
 //lister les payements
 Route::get('payement/lister', [PayementController::class, 'index']);
 //afficher payement
-Route::get('payement/detail/{id}', [PayementController::class, 'show']);
+Route::get('payement/detail/{payement}', [PayementController::class, 'show']);
 
 
 //ajouter facture

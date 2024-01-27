@@ -71,10 +71,10 @@ class PayementController extends Controller
   /**
    * Display the specified resource.
    */
-  public function show(string $id)
+  public function show(string $payement)
   {
     try {
-      $payement = Payement::findOrFail($id);
+      $payement = Payement::findOrFail($payement);
 
       return response()->json($payement);
     } catch (Exception) {
