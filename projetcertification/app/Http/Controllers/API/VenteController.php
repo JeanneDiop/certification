@@ -44,21 +44,31 @@ class VenteController extends Controller
       if(isset($request->nomclient))
       {
             $client= new Client();
+          
             $client->nom=$request->nom;
             $client->prenom=$request->prenom;
             $client->code_client=$request->code_client;
             $client->telephone=$request->telephone;
             $client->adresse=$request->adresse;
+            dd($client);
+           
             $client->save();
-            // dd($client);
-            $vente = new Vente();             
+           
+            $vente = new Vente(); 
+                    
             $vente->quantite_vendu = $request->quantite_vendu;
             $vente->montant_total = ($request->prixU*$request->quantite_vendu);
+            
             $vente->produit_id = $request->produit_id;
+          
             $vente->client_id = $client->id;
+            
             $vente->user_id = auth()->user()->id;
+            
+            
             $vente->save();
-            dd($vente);
+           
+          
             return response()->json([
                   'status_code' => 200,
                   'status_message' => 'vente et client ont été bien ajouté',
