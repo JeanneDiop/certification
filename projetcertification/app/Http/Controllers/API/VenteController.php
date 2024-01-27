@@ -38,146 +38,81 @@ class VenteController extends Controller
    * Store a newly created resource in storage.
    */
   public function store(CreateVenteRequest $request)
-{
-
-    try {
-      if(isset($request->nomclient))
-      {
-            $client= new Client();
-          
-            $client->nom=$request->nom;
-            $client->prenom=$request->prenom;
-            $client->code_client=$request->code_client;
-            $client->telephone=$request->telephone;
-            $client->adresse=$request->adresse;
-            dd($client);
-           
-            $client->save();
-           
-            $vente = new Vente(); 
-                    
-            $vente->quantite_vendu = $request->quantite_vendu;
-            $vente->montant_total = ($request->prixU*$request->quantite_vendu);
-            
-            $vente->produit_id = $request->produit_id;
-          
-            $vente->client_id = $client->id;
-            
-            $vente->user_id = auth()->user()->id;
-            
-            
-            $vente->save();
-           
-          
-            return response()->json([
-                  'status_code' => 200,
-                  'status_message' => 'vente et client ont été bien ajouté',
-                  'client'=>$client,
-                  'produit'=> $vente,
-                ]);
-      }else{
-                $vente = new Vente();
-                $client= Client::where('id',$request->client_id)->first();         
-                $vente->quantite_vendu = $request->quantite_vendu;
-                $vente->montant_total = ($request->prixU*$request->quantite_vendu);
-                $vente->produit_id = $request->produit_id;
-                $vente->client_id = $client->id;
-                $vente->user_id = auth()->user()->id;
-                $produit=Produit::where('id',$request->produit_id)->first();
-                $produit->quantite -=$request->quantitevendu;
-                if($vente->save()){
-                if($produit->update()){
-                return response()->json([
-                'status_code' => 200,
-                'status_message' => 'vente et produit ont été bien mis à jour',
-                'achat' => $vente,
-                'produit' => $produit
-                ]);
-                }else{
-                return response()->json([
-                'status_code' => 500,
-                'status_message' => 'Échec de la mise à jour de l\'achat et du produit',
-                  ]);
-                }
-                }else {
-                  return response()->json([
-                  'status_code' => 404,
-                  'status_message' => 'Produit non trouvé',
-                  ], 404);
-                        }
-                        
-      }
-                } catch (Exception $e) {
-                return response()->json($e);
-                }
-  }
-
-
-public function show(string $id)
-{
-try {
-  $produit = Vente::findOrFail($id);
-
-  return response()->json($produit);
-} catch (Exception) {
-  return response()->json(['message' => 'Désolé, pas de produit trouvé.'], 404);
-}
-}
-
-/**
-* Show the form for editing the specified resource.
-*/
-
-
-
-
-
-
-
-  /**
-   * Display the specified resource.
-   */
-
-
-  /**
-   * Show the form for editing the specified resource.
-   */
-  public function update(EditVenteRequest $request, Vente $vente)
   {
       try {
-          $vente->quantite_vendu = $request->quantite_vendu;
-          $vente->montant_total = $request->prixU * $request->quantite_vendu;
-          $vente->produit_id = $request->produit_id;
-          $vente->client_id = $request->client_id;
-          $vente->user_id = auth()->user()->id;
+          if (isset($request->nomclient)) {
+              $client = new Client();
+              $client->nom = $request->nomclient;
+              $client->prenom = $request->prenom;
+              $client->code_client = $request->code_client;
+              $client->telephone = $request->telephone;
+              $client->adresse = $request->adresse;
+              $client->save();
   
-          $produit = Produit::findOrFail($request->produit_id);
+              $vente = new Vente();
+              $vente->montant_total = ($request->prixU * $request->quantite_vendu);
+              $vente->quantite_vendu = $request->quantite_vendu;
+              $vente->produit_id = $request->produit_id;
+              $vente->client_id = $client->id;
+              $vente->user_id = auth()->user()->id;
+              $vente->save();
   
-          // Correction : Utiliser l'opérateur -= pour décrémenter la quantité
-          $produit->quantite -= $request->quantite_vendu;
-          $produit->save();
-  
-          if ($vente->save()) {
               return response()->json([
                   'status_code' => 200,
-                  'status_message' => 'Vente a été modifié',
-                  'data' => $vente,
+                  'status_message' => 'Vente et client ont été bien ajoutés',
+                  'client' => $client,
+                  'produit' => $vente,
               ]);
           } else {
-              return response()->json([
-                  'status_code' => 500,
-                  'status_message' => 'La modification de la vente a échoué',
-                  'data' => $vente,
-              ]);
-          }
-      } catch (Exception $e) {
-          return response()->json([
-              'status_code' => 500,
-              'status_message' => 'Erreur lors de la mise à jour de la vente',
-              'error' => $e->getMessage(),
-          ]);
-      }
-  }
+              $vente = new Vente();
+              $client = Client::find($request->client_id);
+  
+              if ($client) {
+                  $vente->quantite_vendu = $request->quantite_vendu;
+                  $vente->montant_total = ($request->prixU * $request->quantite_vendu);
+                  $vente->produit_id = $request->produit_id;
+                  $vente->client_id = $client->id;
+                  $vente->user_id = auth()->user()->id;
+  
+                  $produit = Produit::find($request->produit_id);
+  
+                  if ($produit) {
+                      $produit->quantite -= $request->quantite_vendu;
+  
+                      if ($vente->save() && $produit->update()) {
+                        return response()->json([
+                            'status_code' => 200,
+                            'status_message' => 'Vente et produit ont été bien mis à jour',
+                            'vente' => $vente,
+                            'produit' => $produit,
+                        ]);
+                    } else {
+                        return response()->json([
+                            'status_code' => 500,
+                            'status_message' => 'Échec de la mise à jour de la vente ou du produit',
+                        ]);
+                    }
+                } else {
+                    return response()->json([
+                        'status_code' => 404,
+                        'status_message' => 'Produit non trouvé',
+                    ], 404);
+                }
+            } else {
+                return response()->json([
+                    'status_code' => 404,
+                    'status_message' => 'Client non trouvé',
+                ], 404);
+            }
+        }
+    } catch (Exception $e) {
+        return response()->json([
+            'status_code' => 500,
+            'status_message' => 'Une erreur s\'est produite lors de l\'enregistrement de la vente et du client.',
+            'error_details' => $e->getMessage(),
+        ]);
+    }
+}
   
   /**
    * Update the specified resource in storage.

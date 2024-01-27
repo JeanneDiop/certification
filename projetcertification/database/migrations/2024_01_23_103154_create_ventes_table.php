@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('quantite_vendu');
             $table->string('montant_total');
             $table->foreignIdFor(Produit::class)->constrained()->onDelete('cascade');
-            $table->foreignIdFor(Client::class)->nullable()->constrained()->onDelete('cascade');
             $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
             
           
