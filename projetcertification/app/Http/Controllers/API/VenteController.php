@@ -137,8 +137,15 @@ class VenteController extends Controller
         $vente->user_id = auth()->user()->id;
 
         $produit = Produit::find($request->produit_id);
-
+       //si le produit est trouvé
         if ($produit) {
+        //ici on verifie d'abord si la quantite vendue est sup a la quantite en stock si c'est vrai on effectue pas l'insertion sinon on insere
+         if( $produit->quantite < $request->quantite_vendu){
+          return response()->json([
+              'status_code' => 200,
+              'status_message' => 'vous ne pouvez pas effectuer de vente car la quantité en stock est inferieur à la quantité que tu veux vendre',
+            ]);
+       }else{
           $produit->quantite -= $request->quantite_vendu;
 
           if ($vente->save() && $produit->update()) {
@@ -154,6 +161,7 @@ class VenteController extends Controller
               'status_message' => 'Échec de la mise à jour de la vente ou du produit',
             ]);
           }
+        }
         } else {
           return response()->json([
             'status_code' => 404,

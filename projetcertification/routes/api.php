@@ -151,6 +151,8 @@ Route::get('facture/lister', [FactureController::class, 'index']);
 //afficher facture
 Route::get('facture/detail/{id}', [FactureController::class, 'show']);
 
+
+
 Route::post('whatsapp.userquincaillerie/{id}', [ClientController::class, 'redirigerWhatsApp']);
 
 

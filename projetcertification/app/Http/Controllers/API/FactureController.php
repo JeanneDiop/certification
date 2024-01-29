@@ -40,8 +40,6 @@ class FactureController extends Controller
     {
         try
         {
-               
-
                $facture = new Facture();
                $facture->numerofacture = $request->numerofacture;
                $facture->payement_id = $request->payement_id;
