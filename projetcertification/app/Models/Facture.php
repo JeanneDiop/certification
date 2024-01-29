@@ -9,8 +9,10 @@ class Client extends Model
 {
     use HasFactory;
 
-    public function vente()
+   
+
+    public function payement()
     {
-        return $this->hasMany(Vente::class);
+        return $this->belongsTo(Payement::class, 'payement_id');
     }
 }

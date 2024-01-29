@@ -4,11 +4,12 @@ namespace App\Http\Controllers\API;
 
 use Exception;
 use App\Models\Produit;
+use App\Models\Categorie;
 use Illuminate\Http\Request;
+use openApi\Annotations as OA;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Produit\EditProduitRequest;
 use App\Http\Requests\Produit\CreateProduitRequest;
-use openApi\Annotations as OA;
 /**
  
 *@OA\Info(title="endpointProduit", version="0.1")*/
@@ -49,6 +50,40 @@ class ProduitController extends Controller
  *
  * @return \Illuminate\Http\JsonResponse
  */
+
+ public function getProduitsByCategorie($categorie_id)
+{
+    try {
+        // Trouver la catégorie par son ID
+        $categorie = Categorie::findOrFail($categorie_id);
+      
+        // Récupérer tous les produits liés à cette catégorie
+        $produit = $categorie->produit;
+      
+if($produit->isEmpty()){
+    return response()->json([
+        'status_code' => 500,
+        'status_message' => 'aucun produit trouvé  pour cette categorie.',
+        
+    ]); 
+}else{
+    return response()->json([
+        'status_code' => 200,
+        'status_message' => 'Le produit de cette catégorie a été récupéré avec succès.',
+        'data' => $produit
+    ]);
+
+}
+}catch (\Exception $e) {
+    return response()->json([
+        'status_code' => 500,
+        'status_message' => 'Une erreur s\'est produite lors de la recherche de produits par catégorie.',
+        'error' => $e->getMessage()
+    ], 500);
+}
+     
+}
+
     public function index()
     {
         try {

@@ -9,7 +9,7 @@ class Categorie extends Model
 {
     use HasFactory;
 
-    public function produits()
+    public function produit()
     {
         return $this->hasMany(Produit::class);
     }

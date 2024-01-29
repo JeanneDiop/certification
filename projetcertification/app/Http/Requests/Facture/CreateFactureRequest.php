@@ -11,7 +11,7 @@ class CreateFactureRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class CreateFactureRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'numerofacture.required' => 'Le champ "" est obligatoire.',
+            'quantiteachat.numeric' => 'Le champ "quantiteachat" doit être un nombre (entier ou décimal).',
+            'prixachat.required' => 'Le champ "Prixachat" est obligatoire.',
         ];
     }
 }

@@ -88,17 +88,10 @@ Route::get('produit/lister', [ProduitController::class, 'index']);
 //afficher un produit
 Route::get('produit/detail/{id}', [ProduitController::class, 'show']);
 
+Route::get('produit/{categorie_id}', [ProduitController::class, 'getProduitsByCategorie']);
 
-//ajouter Tarification
-Route::post('tarification/create', [TarificationController::class, 'store']);
-//modifier un  Tarification
- Route::put('tarification/edit/{id}', [TarificationController::class, 'update']);
-//supprimer un tarification
-Route::delete('tarification/supprimer/{id}', [TarificationController::class, 'destroy']);
-//lister les tarifications
-Route::get('tarification/lister', [TarificationController::class, 'index']);
-//afficher un tarification
-Route::get('tarification/detail/{id}', [TarificationController::class, 'show']);
+
+
 
 
 //ajouter Achat
