@@ -29,7 +29,7 @@ class CreatePayementRequest extends FormRequest
             'vente_id' => 'required|string',
             'montant_payement' => 'required|numeric',
             
-            // 'etat' => ['required', Rule::in(['comptant', 'acompte'])],
+          
         ];
     }
     
@@ -39,8 +39,7 @@ class CreatePayementRequest extends FormRequest
             'vente_id.required' => 'Le champ vente_id est requis.',
             'montant_payement.required' => 'Le champ montant payement est requis.',
             'montant_payement.numeric' => 'Le champ montant payement doit être un nombre.',
-            // 'etat.required' => 'Le champ etat est requis.',
-            // 'etat.in' => 'Le champ etat doit être soit "comptant" soit "acompte".',
+        
         ];
     }
     

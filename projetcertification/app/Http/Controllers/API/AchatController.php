@@ -6,10 +6,11 @@ use Exception;
 use App\Models\Achat;
 use App\Models\Produit;
 use Illuminate\Http\Request;
+use openApi\Annotations as OA;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Achat\EditAchatRequest;
 use App\Http\Requests\Achat\CreateAchatRequest;
-use openApi\Annotations as OA;
+use App\Http\Requests\Achat\SupprimerAchatRequest;
 
 
 /**
@@ -338,21 +339,37 @@ class AchatController extends Controller
  *      ),
  * )
  */
-    public function destroy(Achat $achat)
-    {
-      try{
-        $achat->delete();
+public function destroy(SupprimerAchatRequest $request, Achat $achat)
+{
+    try {
+        $produit = Produit::where('id', $request->produit_id)->first();
 
+        if ($produit) {
+            $produit->quantite -= $request->quantiteachat;
+            $produit->save(); // Assurez-vous de sauvegarder les modifications sur le produit
+
+            $achat->delete();
+
+            return response()->json([
+                'status_code' => 200,
+                'status_message' => 'L\'achat a été bien supprimé, la quantité du produit a été mise à jour.',
+                'data' => $achat
+            ]);
+        } else {
+            return response()->json([
+                'status_code' => 404,
+                'status_message' => 'Le produit associé à cet achat n\'a pas été trouvé.'
+            ], 404);
+        }
+    } catch (Exception $e) {
         return response()->json([
-          'status_code' => 200,
-          'status_message' => 'achat a été bien supprimer',
-          'data' => $achat
-        ]);
-      } catch (Exception $e) {
-        return response()->json($e);
-      }
-    
-      }
+            'status_code' => 500,
+            'status_message' => 'Une erreur s\'est produite lors de la suppression de l\'achat.',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
 
   }
 

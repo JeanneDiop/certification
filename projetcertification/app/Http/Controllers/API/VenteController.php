@@ -296,7 +296,46 @@ class VenteController extends Controller
       ]);
     }
   }
-
+/**
+ * @OA\Get(
+ *      path="/api/ventes/{id}",
+ *      operationId="getVenteById",
+ *      tags={"Ventes"},
+ *      summary="Obtenir une vente par ID",
+ *      description="Retourne les informations d'une vente en fonction de son ID.",
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="ID de la vente à récupérer",
+ *          @OA\Schema(type="integer")
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Opération réussie",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status_code", type="integer", example=200),
+ *              @OA\Property(property="status_message", type="string", example="Vente récupérée avec succès"),
+ *              @OA\Property(property="data", ref="#/components/schemas/Vente"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Vente non trouvée",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status_code", type="integer", example=404),
+ *              @OA\Property(property="status_message", type="string", example="Désolé, pas de vente trouvé."),
+ *          ),
+ *      ),
+ * )
+ *
+ * Obtenir une vente par ID.
+ *
+ * Cette fonction retourne les informations d'une vente en fonction de son ID. Si la vente est trouvée, elle est renvoyée avec un code de statut 200. Sinon, une réponse avec un code de statut 404 est renvoyée indiquant que la vente n'a pas été trouvée.
+ *
+ * @param  string  $id
+ * @return \Illuminate\Http\JsonResponse
+ */
 
   public function show(string $id)
   {
@@ -309,7 +348,54 @@ class VenteController extends Controller
       }
   }
 
-
+/**
+ * @OA\Delete(
+ *      path="/api/ventes/{vente}",
+ *      operationId="deleteVente",
+ *      tags={"Ventes"},
+ *      summary="Supprimer une vente",
+ *      description="Supprime une vente en fonction de son ID.",
+ *      @OA\Parameter(
+ *          name="vente",
+ *          in="path",
+ *          required=true,
+ *          description="ID de la vente à supprimer",
+ *          @OA\Schema(type="integer")
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Opération réussie",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status_code", type="integer", example=200),
+ *              @OA\Property(property="status_message", type="string", example="Vente supprimée avec succès"),
+ *              @OA\Property(property="data", ref="#/components/schemas/Vente"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Vente non trouvée",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status_code", type="integer", example=404),
+ *              @OA\Property(property="status_message", type="string", example="Vente non trouvée"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=500,
+ *          description="Erreur interne du serveur",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status_code", type="integer", example=500),
+ *              @OA\Property(property="status_message", type="string", example="Échec de la suppression de la vente"),
+ *          ),
+ *      ),
+ * )
+ *
+ * Supprimer une vente.
+ *
+ * Cette fonction supprime une vente en fonction de son ID. Si la vente est trouvée et supprimée avec succès, elle renvoie une réponse avec un code de statut 200. Si la vente n'est pas trouvée, une réponse avec un code de statut 404 est renvoyée. En cas d'échec de la suppression, une réponse avec un code de statut 500 est renvoyée.
+ *
+ * @param  \App\Models\Vente  $vente
+ * @return \Illuminate\Http\JsonResponse
+ */
 
   public function destroy(Vente $vente)
   {

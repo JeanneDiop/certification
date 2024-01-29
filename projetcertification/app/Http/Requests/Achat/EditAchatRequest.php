@@ -26,7 +26,7 @@ class EditAchatRequest extends FormRequest
     { 
         return [
             'prixachat' => 'required|numeric', 
-            'montantachat' => 'required|numeric',
+            // 'montantachat' => 'required|numeric',
             'quantiteachat' => 'required|numeric',
             'nomachat' => 'required|string', 
             'produit_id' => 'required|integer', 
@@ -41,8 +41,8 @@ class EditAchatRequest extends FormRequest
             'quantiteachat.numeric' => 'Le champ "quantiteachat" doit être un nombre (entier ou décimal).',
             'prixachat.required' => 'Le champ "Prixachat" est obligatoire.',
             'prixachat.numeric' => 'Le champ "Prixachat" doit être un nombre (entier ou décimal).',
-            'montantachat.required' => 'Le champ "montantachat" est obligatoire.',
-            'montantachat.numeric' => 'Le champ "montantachat" doit être un nombre (entier ou décimal).',
+            // 'montantachat.required' => 'Le champ "montantachat" est obligatoire.',
+            // 'montantachat.numeric' => 'Le champ "montantachat" doit être un nombre (entier ou décimal).',
             'nomachat.required' => 'Le champ "Nomachat" est obligatoire.',
             'nomachat.string' => 'Le champ "Nomachat" doit être une chaîne de caractères.',
             'produit_id.required' => 'Le champ "Produit ID" est obligatoire.',
