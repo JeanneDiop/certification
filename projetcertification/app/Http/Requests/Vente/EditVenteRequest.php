@@ -26,7 +26,6 @@ class EditVenteRequest extends FormRequest
     {
         return [
            'quantite_vendu' => 'required|numeric',
-            'montant_total' => 'required|numeric',
             'produit_id' => 'required|integer',
             'client_id' => 'required|integer',
             // 'user_id' => 'required|integer',
@@ -38,8 +37,6 @@ class EditVenteRequest extends FormRequest
         return [
             'quantite_vendu.required' => 'Le champ quantite_vendu est requis.',
             'quantite_vendu.numeric' => 'Le champ quantite_vendu doit être un nombre.',
-            'montant_total.required' => 'Le champ montant_total est requis.',
-            'montant_total.numeric' => 'Le champ montant_total doit être un nombre.',
             'produit_id.required' => 'Le champ produit_id est requis.',
             'produit_id.integer' => 'Le champ produit_id doit être un entier.',
             'client_id.required' => 'Le champ client_id est requis.',

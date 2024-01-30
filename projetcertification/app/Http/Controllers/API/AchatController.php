@@ -342,7 +342,7 @@ class AchatController extends Controller
 public function destroy(SupprimerAchatRequest $request, Achat $achat)
 {
     try {
-        $produit = Produit::where('id', $request->produit_id)->first();
+        $produit = Produit::find($achat->produit_id);
 
         if ($produit) {
             $produit->quantite -= $request->quantiteachat;

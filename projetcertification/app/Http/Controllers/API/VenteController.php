@@ -412,7 +412,7 @@ class VenteController extends Controller
 
       return response()->json([
         'status_code' => 200,
-        'status_message' => 'achat a été bien supprimer',
+        'status_message' => 'vente a été bien supprimer',
         'data' => $vente
       ]);
     } catch (Exception $e) {

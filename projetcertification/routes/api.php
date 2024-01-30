@@ -62,7 +62,7 @@ Route::put('employe/edit/{user}', [AuthController::class, 'update']);
 
 Route::middleware(['auth:api','role_employe'])->group(function() {  });
 
-Route::put('password/user', [AuthController::class, 'updatepassword']);
+Route::post('passworde/{id}', [AuthController::class, 'updatepassword']);
 
 
 //ajouter Categorie
@@ -114,6 +114,8 @@ Route::post('vente/create', [VenteController::class, 'store']);
 Route::get('vente/lister', [VenteController::class, 'index']);
 //afficher vente
 Route::get('vente/detail/{id}', [VenteController::class, 'show']);
+//supprimer  vente
+Route::delete('vente/supprimer/{id}', [VenteController::class, 'destroy']);
 
 
 //ajouter Client

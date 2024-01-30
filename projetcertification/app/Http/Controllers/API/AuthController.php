@@ -52,7 +52,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register', 'index','update','archiver','show']]);
+        $this->middleware('auth:api', ['except' => ['login','register', 'index','update','archiver','show','updatepassword']]);
     }
 
     /**
