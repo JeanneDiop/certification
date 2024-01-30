@@ -62,13 +62,52 @@ class AuthController extends Controller
      */
 
 
-     public function updatepassword(Request $request,$id ){
-        if($request->password===$request->passwordconfirme){
-            $user=User::find($id);
-            $user->password=Hash::make($request->password);
-            $user->save();
-        }
-     }
+    //  public function updatepassword(Request $request,$id ){
+    //     if($request->password===$request->passwordconfirme){
+    //         $user=User::find($id);
+    //         $user->password=Hash::make($request->password);
+    //         $user->save();
+    //     }
+    //  }
+
+
+
+    public function updatepassword(Request $request, $id)
+{
+    // Vérifier si l'utilisateur existe
+    $user = User::find($id);
+
+    if (!$user) {
+        return response()->json([
+            'status_code' => 404,
+            'status_message' => 'Utilisateur non trouvé.'
+        ], 404);
+    }
+
+    // // Validation du mot de passe
+    // $validator = Validator::make($request->all(), [
+    //     'password' => 'required|min:8|confirmed',
+    // ]);
+
+    // if ($validator->fails()) {
+    //     return response()->json([
+    //         'status_code' => 422,
+    //         'status_message' => 'Échec de validation.',
+    //         'errors' => $validator->errors(),
+    //     ], 422);
+    // }
+
+    // Mettre à jour le mot de passe
+    $user->password = Hash::make($request->password);
+    $user->save();
+
+    return response()->json([
+        'status_code' => 200,
+        'status_message' => 'Mot de passe mis à jour avec succès.',
+        'data' => $user,
+    ]);
+}
+
      /**
  * @OA\Post(
  *     path="/api/login",

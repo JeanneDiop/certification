@@ -345,9 +345,9 @@ public function destroy(SupprimerAchatRequest $request, Achat $achat)
         $produit = Produit::find($achat->produit_id);
 
         if ($produit) {
-            $produit->quantite -= $request->quantiteachat;
-            $produit->save(); // Assurez-vous de sauvegarder les modifications sur le produit
-
+            $produit->quantite -= $achat->quantiteachat;
+            $produit->save(); 
+           // Assurez-vous de sauvegarder les modifications sur le produit
             $achat->delete();
 
             return response()->json([
