@@ -52,9 +52,9 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register', 'index','update','archiver','show','updatepassword']]);
+        $this->middleware('auth:api', ['except' => ['login','register']]);
     }
-
+// 'index','update','archiver','show','updatepassword'
     /**
      * Get a JWT via given credentials.
      *
@@ -332,6 +332,7 @@ class AuthController extends Controller
     public function register(CreateUserRequest $request)
   {
       try {
+        if (auth()->user()->role_id == 1) {
         $user = new User();
         $user->nom = $request->nom;
         $user->prenom = $request->prenom;
@@ -348,6 +349,14 @@ class AuthController extends Controller
           'status_message' => 'user a été ajouté',
           'data' => $user
         ]);
+
+    }else {
+            // Un utilisateur avec un role_id différent de 1 n'a pas le droit de modifier
+            return response()->json([
+                'status_code' => 403,
+                'status_message' => "Vous n'avez pas la permission d'ajouter cet utilisateur",
+            ]);
+        }
       } catch (Exception $e) {
         return response()->json($e);
       }
@@ -386,6 +395,7 @@ class AuthController extends Controller
 {
   try 
   {
+    if (auth()->user()->role_id == 1) {
     $users = User::where('role_id', 2)->get();
 
     return response()->json([
@@ -393,6 +403,13 @@ class AuthController extends Controller
         'status_message' => 'Utilisateurs(employés) avec role_id = 2  récupérés',
         'data' => $users,
     ]);
+}else{
+    // Un utilisateur avec un role_id différent de 1 n'a pas le droit de modifier
+    return response()->json([
+        'status_code' => 403,
+        'status_message' => "Vous n'avez pas la permission ",
+    ]);
+}
 } catch (Exception $e) {
     return response()->json($e);
 }
@@ -404,9 +421,17 @@ class AuthController extends Controller
 public function show(string $id)
 {
     try {
+        if (auth()->user()->role_id == 1) {
         $user = User::findOrFail($id);
 
         return response()->json($user);
+        }else{
+            // Un utilisateur avec un role_id différent de 1 n'a pas le droit de modifier
+            return response()->json([
+                'status_code' => 403,
+                'status_message' => "Vous n'avez pas la permission ",
+            ]);
+        }
     } catch (Exception) {
         return response()->json(['message' => 'Désolé, pas de user trouvé.'], 404);
     }
@@ -565,7 +590,8 @@ public function archiver(User $user)
         }
            return response()->json([
                     'status_code' => 200,
-                    'status_message' => "La désactivation du compte a réussi"
+                    'status_message' => "La désactivation du compte a réussi",
+                    'user'=>$user
                 ]);
             } else {
             // L'utilisateur actuel n'est pas autorisé à désactiver des comptes

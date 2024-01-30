@@ -47,64 +47,33 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
 
+
    //lister les employés
 Route::get('employe/lister', [AuthController::class, 'index']);
  //afficher un employe
 Route::get('employe/detail/{id}', [AuthController::class, 'show']);
 
+//MIDLEWARE ou tout utilisateur connecté pourra avoir l'accés
 
-Route::middleware(['auth:api','role_proprietaire'])->group(function() { 
-//modifier employé
-Route::put('employe/edit/{user}', [AuthController::class, 'update']);
-//pour achiver employé
- Route::put('employe/archive/{user}', [AuthController::class, 'archiver']);
- });
+Route::middleware('auth.check')->group(function () {
+//ajouter Produit
+Route::post('produit/create', [ProduitController::class, 'store']);
+//modifier un  Produit
+Route::put('produit/edit/{id}', [ProduitController::class, 'update']);
+ //supprimer un produit
+Route::delete('produit/supprimer/{id}', [ProduitController::class, 'destroy']);
 
-Route::middleware(['auth:api','role_employe'])->group(function() {  });
-
-Route::post('passworde/{id}', [AuthController::class, 'updatepassword']);
-
-
-//ajouter Categorie
-Route::post('categorie/create', [CategorieController::class, 'store']);
-//modifier categorie
-Route::put('categorie/edit/{id}', [CategorieController::class, 'update']);
 //lister les categories
 Route::get('categorie/lister', [CategorieController::class, 'index']);
 //afficher un categorie
 Route::get('categorie/detail/{id}', [CategorieController::class, 'show']);
-//supprimer un categorie
-Route::delete('categorie/supprimer/{id}', [CategorieController::class, 'destroy']);
-
-
-//ajouter Produit
-Route::post('produit/create', [ProduitController::class, 'store']);
- //modifier un  Produit
-Route::put('produit/edit/{id}', [ProduitController::class, 'update']);
-  //supprimer un produit
-Route::delete('produit/supprimer/{id}', [ProduitController::class, 'destroy']);
-   //lister les produits
-Route::get('produit/lister', [ProduitController::class, 'index']);
-//afficher un produit
-Route::get('produit/detail/{id}', [ProduitController::class, 'show']);
-
+//voir les produits par categorie
 Route::get('produit/{categorie_id}', [ProduitController::class, 'getProduitsByCategorie']);
 
-
-
-
-
-//ajouter Achat
-Route::post('achat/create', [AchatController::class, 'store']);
-//modifier  achat
- Route::put('achat/edit/{achat}', [AchatController::class, 'update']);
-//supprimer  achat
-Route::delete('achat/supprimer/{achat}', [AchatController::class, 'destroy']);
-//lister les achats
-Route::get('achat/lister', [AchatController::class, 'index']);
-//afficher achat
-Route::get('achat/detail/{id}', [AchatController::class, 'show']);
-
+//ajouter Vente
+Route::post('vente/create', [VenteController::class, 'store']);
+//modifier  vente
+ Route::put('vente/edit/{vente}', [VenteController::class, 'update']);
 
 //ajouter Vente
 Route::post('vente/create', [VenteController::class, 'store']);
@@ -114,8 +83,7 @@ Route::post('vente/create', [VenteController::class, 'store']);
 Route::get('vente/lister', [VenteController::class, 'index']);
 //afficher vente
 Route::get('vente/detail/{id}', [VenteController::class, 'show']);
-//supprimer  vente
-Route::delete('vente/supprimer/{id}', [VenteController::class, 'destroy']);
+
 
 
 //ajouter Client
@@ -129,6 +97,13 @@ Route::get('client/lister', [ClientController::class, 'index']);
 //afficher client
 Route::get('client/detail/{id}', [ClientController::class, 'show']);
 
+//ajouter facture
+Route::post('facture/create', [FactureController::class, 'store']);
+//modifier  facture
+ Route::put('facture/edit/{id}', [FactureController::class, 'update']);
+//supprimer  facture
+Route::delete('facture/supprimer/{id}', [FactureController::class, 'destroy']);
+
 
 //ajouter payement
 Route::post('payement/create', [PayementController::class, 'store']);
@@ -136,18 +111,82 @@ Route::post('payement/create', [PayementController::class, 'store']);
  Route::put('payement/edit/{payement}', [PayementController::class, 'update']);
 //supprimer  payement
 Route::delete('payement/supprimer/{payement}', [PayementController::class, 'destroy']);
+
+
+
+
+});
+
+//MIDLEWARE PROPRIETAIRE
+
+Route::middleware(['auth:api','role_proprietaire'])->group(function() { 
+
+//modifier employé
+Route::put('employe/edit/{user}', [AuthController::class, 'update']);
+//pour achiver employé
+ Route::put('employe/archive/{user}', [AuthController::class, 'archiver']);
+ //ajouter Categorie
+Route::post('categorie/create', [CategorieController::class, 'store']);
+//modifier categorie
+Route::put('categorie/edit/{id}', [CategorieController::class, 'update']);
+//supprimer un categorie
+Route::delete('categorie/supprimer/{id}', [CategorieController::class, 'destroy']);
+
+ //supprimer  vente
+ Route::delete('vente/supprimer/{id}', [VenteController::class, 'destroy']);
+
+ //ajouter Achat
+Route::post('achat/create', [AchatController::class, 'store']);
+//modifier  achat
+ Route::put('achat/edit/{achat}', [AchatController::class, 'update']);
+//supprimer  achat
+Route::delete('achat/supprimer/{achat}', [AchatController::class, 'destroy']);
+//lister les achats
+Route::get('achat/lister', [AchatController::class, 'index']);
+//afficher achat
+Route::get('achat/detail/{id}', [AchatController::class, 'show']);
+ });
+
+
+
+//MIDLEWARE EMPLOYE
+Route::middleware(['auth:api','role_employe'])->group(function() {  });
+
+Route::post('passworde/{id}', [AuthController::class, 'updatepassword']);
+
+
+
+
+
+
+
+
+
+   //lister les produits
+Route::get('produit/lister', [ProduitController::class, 'index']);
+//afficher un produit
+Route::get('produit/detail/{id}', [ProduitController::class, 'show']);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //lister les payements
 Route::get('payement/lister', [PayementController::class, 'index']);
 //afficher payement
 Route::get('payement/detail/{payement}', [PayementController::class, 'show']);
 
 
-//ajouter facture
-Route::post('facture/create', [FactureController::class, 'store']);
-//modifier  facture
- Route::put('facture/edit/{id}', [FactureController::class, 'update']);
-//supprimer  facture
-Route::delete('facture/supprimer/{id}', [FactureController::class, 'destroy']);
+
 //lister les factures
 Route::get('facture/lister', [FactureController::class, 'index']);
 //afficher facture
@@ -156,5 +195,10 @@ Route::get('facture/detail/{id}', [FactureController::class, 'show']);
 
 
 Route::post('whatsapp.userquincaillerie/{id}', [ClientController::class, 'redirigerWhatsApp']);
+
+
+Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
+Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
+Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
 
 

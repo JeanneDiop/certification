@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
 
          'role_proprietaire' => \App\Http\Middleware\UserProprietaire::class,
          'role_employe' => \App\Http\Middleware\UserEmploye::class,
+         'auth.check' => \App\Http\Middleware\UserEmploye::class,
     ];
 }
