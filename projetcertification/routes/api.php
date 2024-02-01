@@ -108,7 +108,7 @@ Route::post('payement/create', [PayementController::class, 'store']);
 //modifier  payement
  Route::put('payement/edit/{payement}', [PayementController::class, 'update']);
 //supprimer  payement
-Route::delete('payement/supprimer/{payement}', [PayementController::class, 'destroy']);
+Route::delete('payement/supprimer/{id}', [PayementController::class, 'supprimer']);
 
 Route::delete('supprimer/payement/{etat}', [PayementController::class, 'destroy']);
 

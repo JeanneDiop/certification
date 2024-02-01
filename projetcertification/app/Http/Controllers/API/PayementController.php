@@ -403,21 +403,31 @@ public function listerpayementacompte()
      }
  }
  
-   
-   public function supprimer(Payement $payement)
-{
-     try{
-       $payement->delete();
  
-       return response()->json([
-         'status_code' => 200,
-         'status_message' => 'payement a été bien supprimer',
-         'data' => $payement
-       ]);
+ public function supprimer(string $id)
+ {
+     try {
+         $payement = Payement::find($id);
+ 
+         if (!$payement) {
+             return response()->json([
+                 'status_code' => 404,
+                 'status_message' => "Aucun paiement avec l'ID '$id' n'a été trouvé.",
+             ], 404);
+         }
+ 
+         $payement->delete();
+ 
+         return response()->json([
+             'status_code' => 200,
+             'status_message' => "Le paiement avec l'ID '$id' a été supprimé",
+             'data' => $payement,
+         ]);
      } catch (Exception $e) {
-       return response()->json($e);
+         return response()->json($e);
      }
-}
+ }
+ 
 
 
 public function destroy($etat)
