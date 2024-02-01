@@ -110,14 +110,18 @@ Route::post('payement/create', [PayementController::class, 'store']);
 //supprimer  payement
 Route::delete('payement/supprimer/{payement}', [PayementController::class, 'destroy']);
  //lister les payements
- Route::get('payement/lister', [PayementController::class, 'index']);
+Route::get('payement/lister', [PayementController::class, 'index']);
+  //lister les payementsacomptes
+Route::get('payementacompte/lister', [PayementController::class, 'listerpayementacompte']);
+   //lister les payementscomptant
+Route::get('payementcomptant/lister', [PayementController::class, 'listerpayementcomptant']);
  //afficher payement
- Route::get('payement/detail/{payement}', [PayementController::class, 'show']);
+Route::get('payement/detail/{payement}', [PayementController::class, 'show']);
 
  //ajouter Categorie
- Route::post('categorie/create', [CategorieController::class, 'store']);
+Route::post('categorie/create', [CategorieController::class, 'store']);
  //modifier categorie
- Route::put('categorie/edit/{id}', [CategorieController::class, 'update']);
+Route::put('categorie/edit/{id}', [CategorieController::class, 'update']);
  //supprimer un categorie
  Route::delete('categorie/supprimer/{id}', [CategorieController::class, 'destroy']);
  //lister les categories

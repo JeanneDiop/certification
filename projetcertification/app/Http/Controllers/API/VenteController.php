@@ -367,14 +367,19 @@ class VenteController extends Controller
                 $produittr=Produit::find($produit['id']);
                 $produittr->quantite += $historiquevente->quantite_vendu - $produit['quantite'];
                 $produittr->update();
+                $historiquevente->quantite_vendu=$produit['quantite'];
 
               }elseif($historiquevente->produit_id==$produit['id'] && $historiquevente->quantite_vendu < $produit['quantite'] ){
                 $produittr=Produit::find($produit['id']);
                
                 $produittr->quantite -= $produit['quantite'] - $historiquevente->quantite_vendu  ;
                 $produittr->update();
+                $historiquevente->quantite_vendu=$produit['quantite']; 
+
               }
+              $historiquevente->quantite_vendu=$produit['quantite']; 
             }
+            
             $historiquevente->save();
           }
             
