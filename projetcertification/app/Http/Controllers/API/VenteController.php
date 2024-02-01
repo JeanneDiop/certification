@@ -358,29 +358,26 @@ class VenteController extends Controller
         $vente->client_id = $request->client_id;
         $vente->montant_total = $montant_total;
         $vente->user_id = auth('api')->user()->id;
-
-        // Enregistrer les détails de la vente
         if ($vente->save()) {
+          $historiqueventes=Historiquevente::where('vente_id', $vente->id)->get();
+          foreach ( $historiqueventes as  $historiquevente) {
+            foreach ($produits as $produit) {    
+         
+              if($historiquevente->produit_id==$produit['id'] && $historiquevente->quantite_vendu > $produit['quantite'] ){
+                $produittr=Produit::find($produit['id']);
+                $produittr->quantite += $historiquevente->quantite_vendu - $produit['quantite'];
+                $produittr->update();
 
-            // Supprimer les historiqueventes existantes pour cette vente
-            Historiquevente::where('vente_id', $vente->id)->delete();
-
-            // Mettre à jour les historiqueventes et les produits
-            foreach ($produits as $produit) {
-                $historiqueventes = new Historiquevente();
-                $historiqueventes->vente_id = $vente->id;
-                $historiqueventes->quantite_vendu = $produit['quantite'];
-                $historiqueventes->produit_id = $produit['id'];
-                $historiqueventes->save();
-                $produitModifier = Produit::find($produit['id']);
-
-                // Ajuster la quantité en fonction de la différence
-                $diff = $produitTrouve->quantite - $produit['quantite'];
-                $produitModifier->quantite += $diff;
-
-                // Enregistrer la quantité ajustée du produit
-                $produitModifier->save();
+              }elseif($historiquevente->produit_id==$produit['id'] && $historiquevente->quantite_vendu < $produit['quantite'] ){
+                $produittr=Produit::find($produit['id']);
+               
+                $produittr->quantite -= $produit['quantite'] - $historiquevente->quantite_vendu  ;
+                $produittr->update();
+              }
             }
+            $historiquevente->save();
+          }
+            
 
             // Répondre avec succès et renvoyer les détails de la vente mise à jour
             return response()->json([

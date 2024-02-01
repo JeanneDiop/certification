@@ -29,7 +29,7 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
-            'telephone' => '+221765003108',
+            'telephone' => '+221765093108',
             'etat' => 'actif',
             'adresse' => $this->faker->word,
             'role_id' => 2,
