@@ -12,14 +12,35 @@ class Auth_Test extends TestCase
     /**
      * A basic feature test example.
      */
-    use RefreshDatabase;
+    // use RefreshDatabase;
+    public function test_register(): void
+
+    {
+        //Création d'un utilisateur avec une factory
+      
+        $user = User::factory()->create([
+            'telephone' => '+221770724341',
+         ]);
+        
+
+      
+        //Envoi d'une requête HTTP POST vers la route d'enregistrement (api/register) avec les données de l'utilisateur
+        $response = $this->json('POST','api/register', $user->toArray());
+       //Assertion du statut de la réponse
+        $response->assertStatus(200);
+
+   
+    }
+
+    
+    
     public function test_connexion()
     {
-        $userexist =User::where('email','khady@gmail.com')->first();
+        $userexist =User::where('email','jeanne@gmail.com')->first();
 
         $response = $this->postJson('api/login',[
-            'email' => 'khady@gmail.com',
-            'password' => 'azerty'
+            'email' => 'jeanne@gmail.com',
+            'password' => 'azerty12'
         ]);
          //verification
         $response->assertStatus(200);
@@ -29,7 +50,7 @@ class Auth_Test extends TestCase
     {
     
             // Rechercher l'utilisateur
-            $user = User::where('email', 'khady@gmail.com')->first();
+            $user = User::where('email', 'jeanne@gmail.com')->first();
             if (!$user) {
                 $this->fail('Utilisateur non trouvé');
             }

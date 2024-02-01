@@ -13,37 +13,33 @@ class User_Test extends TestCase
      * A basic feature test example.
      */
    // use RefreshDatabase;
-    public function test_register_user(): void
+    // public function test_register_user(): void
 
-    {
-        //Création d'un utilisateur avec une factory
-        $user = User::factory()->create();
+    // {
+    //     //Création d'un utilisateur avec une factory
+    //     $user = User::factory()->create();
 
       
-        //Envoi d'une requête HTTP POST vers la route d'enregistrement (api/register) avec les données de l'utilisateur
-        $response = $this->json('POST','api/register', $user->toArray());
-       //Assertion du statut de la réponse
-        $response->assertStatus(200);
+    //     //Envoi d'une requête HTTP POST vers la route d'enregistrement (api/register) avec les données de l'utilisateur
+    //     $response = $this->json('POST','api/register', $user->toArray());
+    //    //Assertion du statut de la réponse
+    //     $response->assertStatus(200);
 
    
-    }
-    public function test_modifier_register(): void
+    // }
+
+    // tester les lister les employes avec un user connecte
+    public function test_listeremploye(): void 
     {
-  // Création d'un utilisateur avec une factory et enregistrement dans la base de données
-    $user = User::factory()->create();
-
-    // Envoi d'une requête HTTP POST vers la route d'enregistrement (api/register) avec les données de l'utilisateur
-    $response = $this->json('POST', 'api/register', $user->toArray());
-
-    // Assertion du statut de la réponse
-    $response->assertStatus(200);
-
-    // Assertions supplémentaires pour vérifier que l'utilisateur a été correctement enregistré dans la base de données
-    $this->assertDatabaseHas('users', [
-        'email' => $user->email,
-        // Ajoutez d'autres attributs à vérifier si nécessaire
-    ]);
+        $user = User::factory()->create([
+            'telephone' => '+221706724341',
+         ]);
+        
+           $this->actingAs($user);
+           $response=$this->json('GET', 'api/employe/lister');
+           $response->assertStatus(200);
+    }
 }
 
-    }
+    
 

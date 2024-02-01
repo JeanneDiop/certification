@@ -15,13 +15,14 @@ class Produit extends Model
         return $this->belongsTo(Categorie::class, 'catagorie_id');
     }
 
-    public function tarification()
-    {
-        return $this->hasMany(Tarification::class);
-    }
-
     public function achat()
     {
         return $this->hasMany(Achat::class);
     }
+
+    public function historiquevente()
+    {
+        return $this->hasMany(HistoriqueVente::class);
+    }
+
 }

@@ -16,12 +16,17 @@ class Vente extends Model
 
     public function produit()
     {
-        return $this->belongsTo(Produit::class, 'produit_id');
+        return $this->hasMany(Produit::class);
     }
 
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function historiquevente()
+    {
+        return $this->hasMany(HistoriqueVente::class);
     }
 }
 

@@ -7,10 +7,13 @@ use App\Models\Vente;
 use App\Models\Client;
 use App\Models\Produit;
 use Illuminate\Http\Request;
+use openApi\Annotations as OA;
+use App\Models\historiquevente;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+
 use App\Http\Requests\Vente\EditVenteRequest;
 use App\Http\Requests\Vente\CreateVenteRequest;
-use openApi\Annotations as OA;
 /**
  
 *@OA\Info(title="endpointCandidature", version="0.1")*/
@@ -73,237 +76,83 @@ class VenteController extends Controller
    * Store a newly created resource in storage.
    */
 
-   /**
- * @OA\Post(
- *      path="/api/ventes",
- *      operationId="createVente",
- *      tags={"Ventes"},
- *      summary="Créer une nouvelle vente",
- *      description="Enregistre une nouvelle vente avec les informations fournies dans la requête.",
- *      @OA\RequestBody(
- *          required=true,
- *          description="Données de la vente à créer",
- *          @OA\JsonContent(ref="#/components/schemas/CreateVenteRequest")
- *      ),
- *      @OA\Response(
- *          response=200,
- *          description="Opération réussie",
- *          @OA\JsonContent(
- *              @OA\Property(property="status_code", type="integer", example=200),
- *              @OA\Property(property="status_message", type="string", example="Vente ajoutée avec succès et produit mis à jour"),
- *              @OA\Property(property="vente", ref="#/components/schemas/Vente"),
- *              @OA\Property(property="produit", ref="#/components/schemas/Produit"),
- *          ),
- *      ),
- *      @OA\Response(
- *          response=404,
- *          description="Client ou produit non trouvé",
- *          @OA\JsonContent(
- *              @OA\Property(property="status_code", type="integer", example=404),
- *              @OA\Property(property="status_message", type="string", example="Client ou produit non trouvé"),
- *          ),
- *      ),
- *      @OA\Response(
- *          response=500,
- *          description="Erreur interne du serveur",
- *          @OA\JsonContent(
- *              @OA\Property(property="status_code", type="integer", example=500),
- *              @OA\Property(property="status_message", type="string", example="Échec de la mise à jour de la vente ou du produit"),
- *          ),
- *      ),
- * )
- *
- * Crée une nouvelle vente.
- *
- * Cette fonction enregistre une nouvelle vente avec les informations fournies dans la requête. Elle met également à jour la quantité du produit vendu.
- *
- * @param  \App\Http\Requests\CreateVenteRequest  $request
- * @return \Illuminate\Http\JsonResponse
- */
-  public function store(CreateVenteRequest $request)
-  {
+ 
 
-    try {
-
-      $vente = new Vente();
-      $client = Client::find($request->client_id);
-
-      if ($client) {
-        $produit = Produit::where('id', $request->produit_id)->first();
-        $vente->quantite_vendu = $request->quantite_vendu;
-        $vente->montant_total = ($produit->prixU * $request->quantite_vendu);
-        $vente->produit_id = $request->produit_id;
-        $vente->client_id = $client->id;
-        $vente->user_id = auth()->user()->id;
-
-        $produit = Produit::find($request->produit_id);
-       //si le produit est trouvé
-        if ($produit) {
-        //ici on verifie d'abord si la quantite vendue est sup a la quantite en stock si c'est vrai on effectue pas l'insertion sinon on insere
-         if( $produit->quantite < $request->quantite_vendu){
-          return response()->json([
-              'status_code' => 200,
-              'status_message' => 'vous ne pouvez pas effectuer de vente car la quantité en stock est inferieur à la quantité que tu veux vendre',
-            ]);
-       }else{
-          $produit->quantite -= $request->quantite_vendu;
-
-          if ($vente->save() && $produit->update()) {
-            return response()->json([
-              'status_code' => 200,
-              'status_message' => 'Vente a été ajouté et produit a été mis à jour',
-              'vente' => $vente,
-              'produit' => $produit,
-            ]);
-          } else {
-            return response()->json([
-              'status_code' => 500,
-              'status_message' => 'Échec de la mise à jour de la vente ou du produit',
-            ]);
-          }
-        }
-        } else {
-          return response()->json([
-            'status_code' => 404,
-            'status_message' => 'Produit non trouvé',
-          ], 404);
-        }
-      } else {
-        return response()->json([
-          'status_code' => 404,
-          'status_message' => 'Client non trouvé',
-        ], 404);
-      }
-    } catch (Exception $e) {
-      return response()->json([
-        'status_code' => 500,
-        'status_message' => 'Une erreur s\'est produite lors de l\'enregistrement de la vente et du client.',
-        'error_details' => $e->getMessage(),
-      ]);
-    }
-  }
-
-  /**
- * @OA\Put(
- *      path="/api/ventes/{vente}",
- *      operationId="updateVente",
- *      tags={"Ventes"},
- *      summary="Mettre à jour une vente existante",
- *      description="Met à jour une vente existante avec les informations fournies dans la requête.",
- *      @OA\Parameter(
- *          name="vente",
- *          in="path",
- *          required=true,
- *          description="ID de la vente à mettre à jour",
- *          @OA\Schema(type="integer")
- *      ),
- *      @OA\RequestBody(
- *          required=true,
- *          description="Données de la vente à mettre à jour",
- *          @OA\JsonContent(ref="#/components/schemas/EditVenteRequest")
- *      ),
- *      @OA\Response(
- *          response=200,
- *          description="Opération réussie",
- *          @OA\JsonContent(
- *              @OA\Property(property="status_code", type="integer", example=200),
- *              @OA\Property(property="status_message", type="string", example="Vente mise à jour avec succès"),
- *              @OA\Property(property="vente", ref="#/components/schemas/Vente"),
- *              @OA\Property(property="produit", ref="#/components/schemas/Produit"),
- *          ),
- *      ),
- *      @OA\Response(
- *          response=404,
- *          description="Vente, client ou produit non trouvé",
- *          @OA\JsonContent(
- *              @OA\Property(property="status_code", type="integer", example=404),
- *              @OA\Property(property="status_message", type="string", example="Vente, client ou produit non trouvé"),
- *          ),
- *      ),
- *      @OA\Response(
- *          response=500,
- *          description="Erreur interne du serveur",
- *          @OA\JsonContent(
- *              @OA\Property(property="status_code", type="integer", example=500),
- *              @OA\Property(property="status_message", type="string", example="Échec de la mise à jour de la vente ou du produit"),
- *          ),
- *      ),
- * )
- *
- * Met à jour une vente existante.
- *
- * Cette fonction met à jour une vente existante avec les informations fournies dans la requête. Elle ajuste également la quantité du produit vendu en conséquence.
- *
- * @param  \App\Http\Requests\EditVenteRequest  $request
- * @param  \App\Models\Vente  $vente
- * @return \Illuminate\Http\JsonResponse
- */
-
-  public function update(EditVenteRequest $request, Vente $vente)
-  {
-    try {
-      $vente = Vente::find($vente);
-
-      if (!$vente) {
-        return response()->json([
-          'status_code' => 404,
-          'status_message' => 'Vente non trouvée',
-        ], 404);
-      }
-
-      $client = Client::find($request->client_id);
-
-      if (!$client) {
-        return response()->json([
-          'status_code' => 404,
-          'status_message' => 'Client non trouvé',
-        ], 404);
-      }
-
-      $produit = Produit::find($vente->produit_id);
-
-      if (!$produit) {
-        return response()->json([
-          'status_code' => 404,
-          'status_message' => 'Produit non trouvé',
-        ], 404);
-      }
-      if($vente->quantite_vendu > $request->quantite_vendu){
-  
-        $diff=$vente->quantite_vendu - $request->quantite_vendu;
-        $produit->quantite +=$diff;
-      }elseif($vente->quantite_vendu < $request->quantite_vendu){
-        $diff= $request->quantite_vendu - $vente->quantite_vendu;
-        $produit->quantite -=$diff;
-      }
-      $vente->quantite_vendu=$request->quantite_vendu;
-      $vente->montant_total = ($produit->prixU * $request->quantite_vendu);
-      $vente->produit_id = $request->produit_id;
-      $vente->client_id = $client->id;
-      $vente->user_id = auth()->user()->id;
-
-   
-      if ($vente->save() && $produit->update()) {
-        return response()->json([
-          'status_code' => 200,
-          'status_message' => 'Vente mise à jour avec succès',
-          'vente' => $vente,
-          'produit' => $produit,
-        ]);
-      } else {
-        return response()->json([
-          'status_code' => 500,
-          'status_message' => 'Échec de la mise à jour de la vente ou du produit',
-        ]);
-      }
-    } catch (Exception $e) {
-      return response()->json([
-        'status_code' => 500,
-        'status_message' => 'Une erreur s\'est produite lors de la mise à jour de la vente.',
-        'error_details' => $e->getMessage(),
-      ]);
-    }
-  }
+//  public function update(EditVenteRequest $request, Vente $vente)
+//  {
+//      try {
+//          $montant_total = 0;
+//          $produits = $request->produit;
+ 
+//          foreach ($produits as $produit) {
+//              $produitTrouve = Produit::find($produit['id']);
+ 
+//              if (!$produitTrouve) {
+//                  return response()->json([
+//                      'message' => "Le produit avec l'ID {$produit['id']} n'a pas été trouvé."
+//                  ], 404);
+//              }
+ 
+//              if ($produit['quantite'] > $produitTrouve->quantite) {
+//                  return response()->json([
+//                      'message' => "La quantité que vous avez saisie est supérieure à celle restante pour le produit {$produitTrouve->nomproduit}."
+//                  ], 422);
+//              }
+ 
+//              $montant_total += $produitTrouve->prixU * $produit['quantite'];
+//          }
+ 
+//          $vente->client_id = $request->client_id;
+//          $vente->montant_total = $montant_total;
+//          $vente->user_id = auth('api')->user()->id;
+ 
+//          if ($vente->save()) {
+//              foreach ($produits as $produit) {
+//                  // Utilisation de where pour récupérer l'enregistrement existant ou null
+//                  $historiquevente = historiquevente::where('vente_id', $vente->id)
+//                      ->where('produit_id', $produit['id'])
+//                      ->first();
+ 
+//                  if (!$historiquevente) {
+//                      // Créer un nouvel enregistrement si non trouvé
+//                      $historiquevente = new historiquevente();
+//                      $historiquevente->vente_id = $vente->id;
+//                      $historiquevente->produit_id = $produit['id'];
+//                  }
+ 
+//                  $historiquevente->quantite_vendu = $produit['quantite'];
+//                  $historiquevente->save();
+ 
+//                  $produitModifier = Produit::find($produit['id']);
+ 
+//                  if ($historiquevente->quantite_vendu > $produit['quantite']) {
+//                      // Nouvelle quantité vendue est inférieure à la quantité précédente
+//                      $diff = $historiquevente->quantite_vendu - $produit['quantite'];
+//                      $produitModifier->quantite += $diff;
+//                      $produitModifier->update();
+//                  } elseif ($historiquevente->quantite_vendu < $produit['quantite']) {
+//                      // Nouvelle quantité vendue est supérieure à la quantité précédente
+//                      $diff = $produit['quantite'] - $historiquevente->quantite_vendu;
+//                      $produitModifier->quantite -= $diff;
+//                      $produitModifier->update();
+//                  }
+//              }
+ 
+//              return response()->json([
+//                  'status_code' => 200,
+//                  'status_message' => 'La vente a été bien mise à jour',
+//                  'vente' => $vente,
+//              ]);
+//          }
+//      } catch (\Throwable $th) {
+//          return response()->json([
+//              'message' => 'Une erreur s\'est produite lors de la mise à jour de la vente.'
+//          ], 500);
+//      }
+//  }
+ 
+ 
+ 
 /**
  * @OA\Get(
  *      path="/api/ventes/{id}",
@@ -405,9 +254,11 @@ class VenteController extends Controller
  * @return \Illuminate\Http\JsonResponse
  */
 
-  public function destroy(Vente $vente)
+  public function destroy(string $id)
   {
     try{
+      $vente = Vente::findOrFail($id);
+
       $vente->delete();
 
       return response()->json([
@@ -432,4 +283,127 @@ class VenteController extends Controller
   /**
    * Remove the specified resource from storage.
    */
+
+  public function store(CreateVenteRequest $request){
+    $vente= new Vente();
+    $montant_total=0;
+    $produits=$request->produit;
+    foreach ($produits as $produit) {
+      $produitTrouver=Produit::Find($produit['id']);
+      if($produit['quantite']>$produitTrouver->quantite){
+        return response()->json([
+          'message'=>"La quantite que vou avez saisie est superieur à celle restant"
+        ]);
+      }
+      $montant_total += $produitTrouver->prixU * $produit['quantite'];
+    }
+    $vente->client_id=$request->client_id;
+    $vente->montant_total=$montant_total;
+    $vente->user_id	= Auth::user()->id;
+    if($vente->save()){
+    
+      foreach ($produits as $produit) {
+        $historiqueventes= new 	historiquevente();
+        $historiqueventes->vente_id=$vente->id;
+        $historiqueventes->quantite_vendu=$produit['quantite'];
+        $historiqueventes->produit_id= $produit['id'];
+        $produitModifier=Produit::Find($produit['id']);
+        $produitModifier->quantite -=$produit['quantite'];
+        $produitModifier->save();
+        $historiqueventes->save();
+      }
+      return response()->json([
+        'status_code' => 200,
+        'status_message' => 'vente a été bien ajouté',
+        'vente'=>$vente,
+      ]);
+     
+    }
+  }
+
+  public function update(EditVenteRequest $request, $id){
+    try {
+        $montant_total = 0;
+        $produits = $request->produit;
+
+        foreach ($produits as $produit) {
+            $produitTrouve = Produit::find($produit['id']);
+
+            if (!$produitTrouve) {
+                return response()->json([
+                    'message' => "Le produit avec l'ID {$produit['id']} n'a pas été trouvé."
+                ], 404);
+            }
+
+            if ($produit['quantite'] > $produitTrouve->quantite) {
+                return response()->json([
+                    'message' => "La quantité que vous avez saisie est supérieure à celle restante pour le produit {$produitTrouve->nomproduit}."
+                ], 422);
+            }
+
+            $montant_total += $produitTrouve->prixU * $produit['quantite'];
+        }
+
+        // Trouver la vente à mettre à jour
+        $vente = Vente::find($id);
+
+        // Vérifier si la vente existe
+        if (!$vente) {
+            return response()->json([
+                'message' => 'Vente non trouvée',
+            ], 404);
+        }
+
+        // Mettre à jour les détails de la vente
+        $vente->client_id = $request->client_id;
+        $vente->montant_total = $montant_total;
+        $vente->user_id = auth('api')->user()->id;
+
+        // Enregistrer les détails de la vente
+        if ($vente->save()) {
+
+            // Supprimer les historiqueventes existantes pour cette vente
+            Historiquevente::where('vente_id', $vente->id)->delete();
+
+            // Mettre à jour les historiqueventes et les produits
+            foreach ($produits as $produit) {
+                $historiqueventes = new Historiquevente();
+                $historiqueventes->vente_id = $vente->id;
+                $historiqueventes->quantite_vendu = $produit['quantite'];
+                $historiqueventes->produit_id = $produit['id'];
+                $historiqueventes->save();
+                $produitModifier = Produit::find($produit['id']);
+
+                // Ajuster la quantité en fonction de la différence
+                $diff = $produitTrouve->quantite - $produit['quantite'];
+                $produitModifier->quantite += $diff;
+
+                // Enregistrer la quantité ajustée du produit
+                $produitModifier->save();
+            }
+
+            // Répondre avec succès et renvoyer les détails de la vente mise à jour
+            return response()->json([
+                'status_code' => 200,
+                'status_message' => 'Vente a été bien mise à jour',
+                'vente' => $vente,
+            ]);
+
+        } else {
+            // En cas d'échec de la mise à jour de la vente
+            return response()->json([
+                'message' => 'Erreur lors de la mise à jour de la vente',
+            ], 500);
+        }
+    } catch (Exception $e) {
+        // En cas d'erreur imprévue
+        return response()->json([
+            'status_code' => 500,
+            'status_message' => 'Une erreur s\'est produite lors de la mise à jour de la vente.',
+            'error_details' => $e->getMessage(),
+        ]);
+    }
+}
+
+
 }

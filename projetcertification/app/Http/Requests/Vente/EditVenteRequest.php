@@ -25,8 +25,8 @@ class EditVenteRequest extends FormRequest
     public function rules(): array
     {
         return [
-           'quantite_vendu' => 'required|numeric',
-            'produit_id' => 'required|integer',
+        //    'quantite_vendu' => 'required|numeric',
+            // 'produit_id' => 'required|integer',
             'client_id' => 'required|integer',
             // 'user_id' => 'required|integer',
         ];
@@ -35,10 +35,10 @@ class EditVenteRequest extends FormRequest
     public function messages()
     {
         return [
-            'quantite_vendu.required' => 'Le champ quantite_vendu est requis.',
-            'quantite_vendu.numeric' => 'Le champ quantite_vendu doit être un nombre.',
-            'produit_id.required' => 'Le champ produit_id est requis.',
-            'produit_id.integer' => 'Le champ produit_id doit être un entier.',
+            // 'quantite_vendu.required' => 'Le champ quantite_vendu est requis.',
+            // 'quantite_vendu.numeric' => 'Le champ quantite_vendu doit être un nombre.',
+            // 'produit_id.required' => 'Le champ produit_id est requis.',
+            // 'produit_id.integer' => 'Le champ produit_id doit être un entier.',
             'client_id.required' => 'Le champ client_id est requis.',
             'client_id.integer' => 'Le champ client_id doit être un entier.',
             // 'user_id.integer' => 'Le champ user_id doit être un entier.',

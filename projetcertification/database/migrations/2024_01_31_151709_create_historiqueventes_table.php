@@ -1,7 +1,6 @@
 <?php
 
-use App\Models\User;
-use App\Models\Client;
+use App\Models\Vente;
 use App\Models\Produit;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,13 +13,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ventes', function (Blueprint $table) {
+        Schema::create('historiqueventes', function (Blueprint $table) {
             $table->id();
-            $table->string('montant_total')->default('0');
-            $table->foreignIdFor(Client::class)->nullable()->constrained()->onDelete('set null');
-            $table->foreignIdFor(User::class)->nullable()->constrained()->onDelete('set null');
-            
-          
+            $table->string('quantite_vendu');
+            $table->foreignIdFor(Vente::class)->nullable()->constrained()->onDelete('set null');
+            $table->foreignIdFor(Produit::class)->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ventes');
+        Schema::dropIfExists('historiqueventes');
     }
 };

@@ -103,28 +103,6 @@ class AchatController extends Controller
             try 
           {
           
-                // $produit= new Produit();
-                // $produit->nomproduit=$request->nomproduit;
-                // $produit->image=$request->image;
-                // $produit->prixU=$request->prixU;
-                // $produit->etat=$request->etat;
-                // $produit->quantiteseuil=$request->quantiteseuil;
-                // $produit->quantite=$request->quantite;
-                // $produit->categorie_id=$request->categorie_id;
-                // $produit->save();
-                // $achat = new Achat();
-                // $achat->montantachat=($request->prixachat*$request->quantiteachat);
-                // $achat->nomachat= $request->nomachat;
-                // $achat->quantiteachat=$request->quantiteachat;
-                // $achat->produit_id=$request->produit->id;
-                // $achat->save();
-                // return response()->json([
-                //   'status_code' => 200,
-                //   'status_message' => 'achat et produit ont été bien ajouté',
-                //   'achat'=>$achat,
-                 
-                // ]);
-    
                 $achat = new Achat();
                 $achat->montantachat=($request->prixachat*$request->quantiteachat);
                 $achat->nomachat= $request->nomachat;

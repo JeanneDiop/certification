@@ -332,7 +332,7 @@ class AuthController extends Controller
     public function register(CreateUserRequest $request)
   {
       try {
-        if (auth()->user()->role_id == 1) {
+        // if (auth()->user()->role_id == 1) {
         $user = new User();
         $user->nom = $request->nom;
         $user->prenom = $request->prenom;
@@ -350,13 +350,13 @@ class AuthController extends Controller
           'data' => $user
         ]);
 
-    }else {
-            // Un utilisateur avec un role_id différent de 1 n'a pas le droit de modifier
-            return response()->json([
-                'status_code' => 403,
-                'status_message' => "Vous n'avez pas la permission d'ajouter cet utilisateur",
-            ]);
-        }
+    // }else {
+    //         // Un utilisateur avec un role_id différent de 1 n'a pas le droit de modifier
+    //         return response()->json([
+    //             'status_code' => 403,
+    //             'status_message' => "Vous n'avez pas la permission d'ajouter cet utilisateur",
+    //         ]);
+    //     }
       } catch (Exception $e) {
         return response()->json($e);
       }

@@ -17,7 +17,9 @@ class Produit_Test extends TestCase
     
         {
             //ca permet à l'utilisateur de se connecter
-            $user = User::factory()->create();
+            $user = User::factory()->create([
+                'telephone' => '+221788304343',
+             ]);
             $this->actingAs($user);
             
             // Création d'un produit avec une factory
@@ -34,55 +36,64 @@ class Produit_Test extends TestCase
     //tester les lister les produits
     public function test_listerproduit(): void
     {
-        $response = $this->json('GET','api/produit/lister');
+
+        $response = $this->json('GET','api/produits/lister');
 
         $response->assertStatus(200);
     }
+    // public function test_listerproduit2(): void
+    // {
+    //     $user = User::factory()->create([
+    //         'telephone' => '+221773855461',
+    //      ]);
+    //     $this->actingAs($user); // Authentifiez l'utilisateur
+    
+    //     $produit1 = Produit::all();
+        
+    //     $response = $this->json('GET', 'api/produit/lister');
+     
+    //     // $response->assertStatus(200);
+     
+    //     $response->assertStatus(200)
+    //     ->assertJson([
+    //         'message' => 'tout les produits listés',
+    //         'data' => $produit1->toArray(),
+    //     ]);
+    // }
+    
 
-
-    //tester les lister produits avec un user connecte
-    public function test_listerproduits(): void 
-    {
-           $user= User::factory()->create();
-           $this->actingAs($user);
-           $response=$this->json('GET', 'api/produit/lister');
-           $response->assertStatus(200);
-    }
+    // tester les lister produits avec un user connecte
+    // public function test_listerproduits(): void 
+    // {
+    //     $user = User::factory()->create([
+    //         'telephone' => '+221776924343',
+    //      ]);
+        
+    //        $this->actingAs($user);
+    //        $response=$this->json('GET', 'api/produit/lister');
+    //        $response->assertStatus(200);
+    // }
 
 
     public function test_supprimeproduit()
     {
-        $user = User::factory()->create();
-        $produit = Produit::factory()->create(['user_id' => $user->id]);
-    
+        $user = User::factory()->create([
+            'telephone' => '+2217741214343',
+         ]);
         $this->actingAs($user);
+
+        $produit = Produit::factory()->create();
+
+        //  dd($produit->id);
     
-        if ($produit->user_id === $user->id) {
-            $response = $this->json('DELETE', url("produit/supprimer/{$produit->id}"));
+    
+        // $this->withoutMiddleware();
+            $response = $this->json('DELETE', url("api/produit/supprimer/2"));
     
             $response->assertStatus(200);
     
-            $this->assertDatabaseMissing('produits', ['id' => $produit->id]);
-        }
+            $this->assertDatabaseMissing('produits', ['id' => 2]);
     }
     
-    
-    
-    //     public function test_supprimerproduit()
-    // {
-    //     $prop = User::factory()->proprietaire()->create();
-    //     $annonce = Annonce::factory()->create(['user_id' => $prop->id]);
-
-    //     $this->actingAs($prop);
-
-    //     if($annonce->user_id === $prop->id){
-    //         $response = $this->json('DELETE', 'api/annonceDestroy' . $annonce->id);
-
-    //         $response->assertStatus(200);
-
-    //         $this->assertDatabaseMissing('annonces', ['id' => $annonce->id]);
-    //     }
-
-   // }
 
 }

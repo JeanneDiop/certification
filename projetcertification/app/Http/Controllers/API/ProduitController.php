@@ -8,6 +8,7 @@ use App\Models\Categorie;
 use Illuminate\Http\Request;
 use openApi\Annotations as OA;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Produit\EditProduitRequest;
 use App\Http\Requests\Produit\CreateProduitRequest;
 /**
@@ -146,8 +147,8 @@ if($produit->isEmpty()){
     { 
             try
          {
-                
-
+            if (Auth::check()) {
+                // Utilisateur connecté, effectuez l'action
                 $produit = new Produit();
                 $produit->nomproduit = $request->nomproduit;
                 $produit->image = $request->image;
@@ -164,6 +165,11 @@ if($produit->isEmpty()){
                     'status_message' => 'produit a été ajouté',
                     'data' => $produit
                 ]);
+            }else {
+                // Utilisateur non connecté, renvoyez un message d'erreur
+                return response()->json(['message' => 'Vous n\'êtes pas autorisé.'], 403);
+            }
+               
             } catch (Exception $e) {
                 return response()->json($e);
             }
