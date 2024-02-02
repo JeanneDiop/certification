@@ -80,6 +80,10 @@ Route::get('vente/detail/{id}', [VenteController::class, 'show']);
 //supprimer  vente
 Route::delete('vente/supprimer/{id}', [VenteController::class, 'destroy']);
 
+//lister les historiques
+Route::get('historiquevente/lister', [HistoriqueventeController::class, 'index']);
+//lister l'historiquevente avec l'id de la vente
+Route::get('historiquevente/{vente_id}', [HistoriqueventeController::class, 'listerhistoriqueparvente']);
 
 
 //ajouter Client
@@ -176,11 +180,6 @@ Route::post('whatsapp.userquincaillerie/{id}', [ClientController::class, 'rediri
 
 
 
-//lister les cients
-Route::get('historiquevente/lister', [HistoriqueventeController::class, 'index']);
-
-
-Route::get('historiquevente/{vente_id}', [HistoriqueventeController::class, 'listerhistoriqueparvente']);
 
 //route qui envoie un formulaire pour saisir son nouveau mot de passe
 Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');

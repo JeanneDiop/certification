@@ -37,7 +37,7 @@ class Achat_Test extends TestCase
 public function test_modifierachat(): void
 {
     $user = User::factory()->create([
-        'telephone' => '+221704200151',
+        'telephone' => '+221704220151',
     ]);
     $this->actingAs($user);
 
