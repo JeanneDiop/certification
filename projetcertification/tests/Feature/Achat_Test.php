@@ -33,6 +33,36 @@ class Achat_Test extends TestCase
 
 }
 
+
+public function test_modifierachat(): void
+{
+    $user = User::factory()->create([
+        'telephone' => '+221704200151',
+    ]);
+    $this->actingAs($user);
+
+    $achat = Achat::factory()->create();
+
+    $response = $this->putjson(("api/achat/edit/{$achat->id}"), [
+        'nomachat' => 'achatfer9',
+        'prixachat' => '5000',
+        'montantachat' => '289078',
+        'quantiteachat' => '45',
+        'produit_id' => '2',
+    ]);
+
+    $response->assertStatus(200);
+
+    $this->assertDatabaseHas('achats', [
+        'id' => $achat->id,
+        'nomachat' => 'achatfer9',
+        'prixachat' => '5000',
+        'montantachat' => '289078',
+        'quantiteachat' => '45',
+        'produit_id' => '2',
+    ]);
+}
+
   // tester les lister produits avec un user connecte
     public function test_listerachats(): void 
     {
@@ -58,10 +88,10 @@ class Achat_Test extends TestCase
     
     
         // $this->withoutMiddleware();
-            $response = $this->json('DELETE', url("api/achat/supprimer/1"));
+            $response = $this->json('DELETE', url("api/achat/supprimer/{$achat->id}"));
     
             $response->assertStatus(200);
     
-            $this->assertDatabaseMissing('achats', ['id' => 1]);
+            $this->assertDatabaseMissing('achats', ['id' => $achat->id]);
     }
 }

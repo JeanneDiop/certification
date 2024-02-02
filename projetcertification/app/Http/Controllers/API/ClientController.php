@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\EditClientRequest;
 use App\Http\Requests\Client\CreateClientRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use PHPUnit\TextUI\Configuration\IncludePathNotConfiguredException;
 
 /**
  
@@ -119,11 +120,10 @@ class ClientController extends Controller
               $client->telephone= $request->telephone;
               $client->adresse= $request->adresse;
               $client->save();
-        
               return response()->json([
                 'status_code' => 200,
                 'status_message' => 'client a été ajouté',
-                'data' => $client
+                'data' => $client,
               ]);
             } catch (Exception $e) {
               return response()->json($e);

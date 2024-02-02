@@ -17,7 +17,7 @@ class Client_Test extends TestCase
     {
        //ca permet à l'utilisateur de se connecter
        $user = User::factory()->create([
-        'telephone' => '+221708314343',
+        'telephone' => '+221708314243',
      ]);
     $this->actingAs($user);
     
@@ -36,7 +36,7 @@ class Client_Test extends TestCase
     public function test_listerclients(): void 
     {
          $user = User::factory()->create([
-            'telephone' => '+221770930343',
+            'telephone' => '+221770935343',
          ]);
         
            $this->actingAs($user);
@@ -47,45 +47,59 @@ class Client_Test extends TestCase
     public function test_modifierclient(): void
     {
         $user = User::factory()->create([
-            'telephone' => '+221704121143',
-         ]);
-        $this->actingAs($user);
-
-        $client = Client::factory()->create([
-            'telephone' => '+221779000000',
-            'code_client' =>'H03451'
+            'telephone' => '+221770048221',
         ]);
-
-        $response = $this->json('PUT', url("api/client/edit/2"), [
+        $this->actingAs($user);
+    
+        $client = Client::factory()->create([
+            'telephone' => '+221707041201',
+            'code_client' => 'T66453'
+        ]);
+    
+        $response = $this->putJson("api/client/edit/$client->id", [
             'nom' => 'DIOP',
             'prenom' => 'Jeanne',
-            'code_client' => 'R98677',
-            'telephone' => '765463823',
+            'code_client' => 'P23430',  
+            'telephone' => '+221761011211',
             'adresse' => 'Fass',
         ]);
     
-            $response->assertStatus(200);
+        $response->assertStatus(200);
+    
+        // Utilisez la méthode first() pour récupérer le client créé
+        $this->assertDatabaseHas('clients', [
+            'id' => $client->id,
+            'nom' => 'DIOP',
+            'prenom' => 'Jeanne',
+            'code_client' => 'P23430',  
+            'telephone' => '+221761011211',
+            'adresse' => 'Fass'
+        ]);
     }
+    
     
     
     public function test_supprimeclient()
     {
         $user = User::factory()->create([
-            'telephone' => '+221765',
+            'telephone' => '+221761903856',
          ]);
         $this->actingAs($user);
 
-        $client= Client::factory()->create();
+        $client= Client::factory()->create([
+            'telephone' => '704503021',
+            'code_client' => 'R90060'
+        ]);
 
         //  dd($produit->id);
     
     
         // $this->withoutMiddleware();
-            $response = $this->json('DELETE', url("api/client/supprimer/1"));
+            $response = $this->json('DELETE', url("api/client/supprimer/{$client->id}"));
     
             $response->assertStatus(200);
     
-            $this->assertDatabaseMissing('clients', ['id' => 1]);
+            $this->assertDatabaseMissing('clients', ['id' => $client->id]);
     }
     
 }

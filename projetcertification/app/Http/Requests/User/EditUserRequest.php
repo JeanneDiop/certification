@@ -29,7 +29,7 @@ class EditUserRequest extends FormRequest
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
-            'password' => 'required|min:8',
+             'password' => 'required|min:8',
             'telephone' => ['required', 'regex:/^\+221(77|78|76|70)\d{7}$/'],
             // 'image' => 'required|string',  // Vous devrez ajuster cette règle en fonction de vos besoins
             'adresse' => 'required|string',
@@ -44,7 +44,7 @@ class EditUserRequest extends FormRequest
             'nom.required' => 'Le champ nom est requis.',
             'prenom.required' => 'Le champ prénom est requis.',
             'email.max' => 'Le champ email doit avoir au maximum :max caractères.',
-            'password.min' => 'Le champ mot de passe doit avoir au moins :min 8 caractères.',
+             'password.min' => 'Le champ mot de passe doit avoir au moins :min 8 caractères.',
             'telephone.regex' => 'Le champ numéro de téléphone doit être au format spécifié.',
             'adresse.required' => 'Le champ adresse est requis.',
             'etat.in' => 'Le champ état doit être actif ou inactif.',

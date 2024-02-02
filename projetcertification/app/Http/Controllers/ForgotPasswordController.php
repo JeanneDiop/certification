@@ -26,12 +26,13 @@ class ForgotPasswordController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function submitForgetPasswordForm(Request $request)
-    {
+    {   
         $request->validate([
             'email' => 'required|email|exists:users',
         ]);
 
         $token = Str::random(64);
+        // dd($token);
 
         DB::table('password_reset_tokens')->insert([
             'email' => $request->email,

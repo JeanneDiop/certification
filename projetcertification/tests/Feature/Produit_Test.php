@@ -36,7 +36,7 @@ class Produit_Test extends TestCase
     public function test_modifierproduit(): void
     {
         $user = User::factory()->create([
-            'telephone' => '+221704121143',
+            'telephone' => '+221704126153',
          ]);
         $this->actingAs($user);
 
@@ -44,7 +44,7 @@ class Produit_Test extends TestCase
     
     
         // $this->withoutMiddleware();
-        $response = $this->json('PUT', url("api/produit/edit/2"), [
+        $response = $this->json('PUT', url("api/produit/edit/{$produit->id}"), [
             'nomproduit' => 'fer9',
             'image' => 'image.png',
             'prixU' => '2890',
@@ -55,6 +55,17 @@ class Produit_Test extends TestCase
         ]);
     
             $response->assertStatus(200);
+
+            $this->assertDatabaseHas('produits',[
+                'nomproduit' => 'fer9',
+                'image' => 'image.png',
+                'prixU' => '2890',
+                'quantite' => '45',
+                'quantiteseuil' => '10',
+                'etat' => 'en_stock',
+                'categorie_id' => '1'
+
+            ]);
     }
     
 
@@ -70,21 +81,17 @@ class Produit_Test extends TestCase
     public function test_supprimeproduit()
     {
         $user = User::factory()->create([
-            'telephone' => '+2217741214343',
+            'telephone' => '+2217721214343',
          ]);
         $this->actingAs($user);
 
         $produit = Produit::factory()->create();
 
-        //  dd($produit->id);
-    
-    
-        // $this->withoutMiddleware();
-            $response = $this->json('DELETE', url("api/produit/supprimer/2"));
+            $response = $this->json('DELETE', url("api/produit/supprimer/{$produit->id}"));
     
             $response->assertStatus(200);
     
-            $this->assertDatabaseMissing('produits', ['id' => 2]);
+            $this->assertDatabaseMissing('produits', ['id' => $produit->id]);
     }
     
 

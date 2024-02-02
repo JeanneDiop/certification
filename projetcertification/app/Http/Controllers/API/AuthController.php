@@ -61,15 +61,6 @@ class AuthController extends Controller
      */
 
 
-    //  public function updatepassword(Request $request,$id ){
-    //     if($request->password===$request->passwordconfirme){
-    //         $user=User::find($id);
-    //         $user->password=Hash::make($request->password);
-    //         $user->save();
-    //     }
-    //  }
-
-
 
     public function updatepassword(Request $request, $id)
 {

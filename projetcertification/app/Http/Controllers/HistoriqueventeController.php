@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Models\Vente;
 use Illuminate\Http\Request;
 use App\Models\historiquevente;
 
@@ -28,11 +29,17 @@ class HistoriqueventeController extends Controller
 {
     try {
         $historiques = Historiquevente::where('vente_id', $vente_id)->get();
+        $vente = Vente::findOrFail($vente_id);
+
+        $client_id = $vente->client_id;
 
         return response()->json([
             'status_code' => 200,
-            'status_message' => 'Historiques de vente pour la vente_id '.$vente_id.' récupérés avec succès',
-            'data' => $historiques,
+            'status_message' => 'Historiques de vente pour la vente_id ' . $vente_id . ' récupérés avec succès',
+            'data' => [
+                'historiques' => $historiques,
+                'client_id' => $client_id,
+            ],
         ]);
     } catch (Exception $e) {
         return response()->json([

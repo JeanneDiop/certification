@@ -11,6 +11,7 @@ use App\Http\Controllers\API\ProduitController;
 use App\Http\Controllers\API\PayementController;
 use App\Http\Controllers\TarificationController;
 use App\Http\Controllers\API\CategorieController;
+use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\HistoriqueventeController;
 
 /*
@@ -181,9 +182,11 @@ Route::get('historiquevente/lister', [HistoriqueventeController::class, 'index']
 
 Route::get('historiquevente/{vente_id}', [HistoriqueventeController::class, 'listerhistoriqueparvente']);
 
-
-// Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
-// Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
-// Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
+//route qui envoie un formulaire pour saisir son nouveau mot de passe
+Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
+//route pour changer le mot de passe dans la base de donnée
+Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
+//route pour saisir son email afin de recevoir un email pour modifier
+Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
 
 
