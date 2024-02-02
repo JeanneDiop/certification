@@ -33,6 +33,31 @@ class Produit_Test extends TestCase
     
     }
 
+    public function test_modifierproduit(): void
+    {
+        $user = User::factory()->create([
+            'telephone' => '+221704121143',
+         ]);
+        $this->actingAs($user);
+
+        $produit = Produit::factory()->create();
+    
+    
+        // $this->withoutMiddleware();
+        $response = $this->json('PUT', url("api/produit/edit/2"), [
+            'nomproduit' => 'fer9',
+            'image' => 'image.png',
+            'prixU' => '2890',
+            'quantite' => '45',
+            'quantiteseuil' => '10',
+            'etat' => 'en_stock',
+            'categorie_id' => '1'
+        ]);
+    
+            $response->assertStatus(200);
+    }
+    
+
     //tester les lister les produits
     public function test_listerproduit(): void
     {
@@ -41,40 +66,7 @@ class Produit_Test extends TestCase
 
         $response->assertStatus(200);
     }
-    // public function test_listerproduit2(): void
-    // {
-    //     $user = User::factory()->create([
-    //         'telephone' => '+221773855461',
-    //      ]);
-    //     $this->actingAs($user); // Authentifiez l'utilisateur
     
-    //     $produit1 = Produit::all();
-        
-    //     $response = $this->json('GET', 'api/produit/lister');
-     
-    //     // $response->assertStatus(200);
-     
-    //     $response->assertStatus(200)
-    //     ->assertJson([
-    //         'message' => 'tout les produits listés',
-    //         'data' => $produit1->toArray(),
-    //     ]);
-    // }
-    
-
-    // tester les lister produits avec un user connecte
-    // public function test_listerproduits(): void 
-    // {
-    //     $user = User::factory()->create([
-    //         'telephone' => '+221776924343',
-    //      ]);
-        
-    //        $this->actingAs($user);
-    //        $response=$this->json('GET', 'api/produit/lister');
-    //        $response->assertStatus(200);
-    // }
-
-
     public function test_supprimeproduit()
     {
         $user = User::factory()->create([

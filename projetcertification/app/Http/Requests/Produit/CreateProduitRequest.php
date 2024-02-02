@@ -32,7 +32,7 @@ class CreateProduitRequest extends FormRequest
             'prixU' => 'required|numeric',
             'quantite' => 'required|numeric',
             'quantiteseuil' => 'required|numeric',
-            'etat' => ['required', 'in:en_stock,rupture,critique,en_cours,terminé'], // Utilisation de 'in' pour le type enum
+            // 'etat' => ['required', 'in:en_stock,rupture,critique,en_cours,terminé'], // Utilisation de 'in' pour le type enum
             'categorie_id' => 'required|integer',
         ];
     }
@@ -45,7 +45,7 @@ class CreateProduitRequest extends FormRequest
             'prixU.numeric' => 'Le champ prixU doit être un nombre.',
             'quantite.numeric' => 'Le champ quantite doit être un nombre.',
             'quantiteseuil.numeric' => 'Le champ quantiteseuil doit être un nombre.',
-            'etat.in' => 'La valeur du champ état n\'est pas valide.',
+            // 'etat.in' => 'La valeur du champ état n\'est pas valide.',
             'categorie_id.integer' => 'Le champ categorie_id doit être un entier.'
         ];
     }

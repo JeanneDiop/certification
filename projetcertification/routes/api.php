@@ -109,9 +109,7 @@ Route::post('payement/create', [PayementController::class, 'store']);
  Route::put('payement/edit/{payement}', [PayementController::class, 'update']);
 //supprimer  payement
 Route::delete('payement/supprimer/{id}', [PayementController::class, 'supprimer']);
-
 Route::delete('supprimer/payement/{etat}', [PayementController::class, 'destroy']);
-
  //lister les payements
 Route::get('payement/lister', [PayementController::class, 'index']);
   //lister les payementsacomptes
@@ -167,16 +165,11 @@ Route::get('employe/detail/{id}', [AuthController::class, 'show']);
 
 //MIDLEWARE EMPLOYE
 Route::middleware(['auth:api','role_employe'])->group(function() {  });
-
 Route::post('passworde/{id}', [AuthController::class, 'updatepassword']);
-
-
-   //lister les produits
+//lister les produits
 Route::get('produits/lister', [ProduitController::class, 'index']);
 //afficher un produit
 Route::get('produit/detail/{id}', [ProduitController::class, 'show']);
-
-
 Route::post('whatsapp.userquincaillerie/{id}', [ClientController::class, 'redirigerWhatsApp']);
 
 

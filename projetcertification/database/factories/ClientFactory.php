@@ -20,8 +20,8 @@ class ClientFactory extends Factory
         return[
             'nom' => $this->faker->word,
             'prenom' => $this->faker->word,
-            'code_client' => 'N92765',
-            'telephone' => '+221705003208',
+            'code_client' => 'N52765',
+            'telephone' => '+221765003208',
             'adresse' => $this->faker->word,
         ];
     }

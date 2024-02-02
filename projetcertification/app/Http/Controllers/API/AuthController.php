@@ -54,7 +54,6 @@ class AuthController extends Controller
     {
         $this->middleware('auth:api', ['except' => ['login','register']]);
     }
-// 'index','update','archiver','show','updatepassword'
     /**
      * Get a JWT via given credentials.
      *
@@ -276,8 +275,7 @@ class AuthController extends Controller
            'user'=>$user,
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => 400000,
-           // auth()->factory()->getTTL() * 60
+            'expires_in' => auth()->factory()->getTTL() * 120
         ]);
     }
 
