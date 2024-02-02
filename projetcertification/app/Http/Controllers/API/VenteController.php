@@ -8,7 +8,7 @@ use App\Models\Client;
 use App\Models\Produit;
 use Illuminate\Http\Request;
 use openApi\Annotations as OA;
-use App\Models\historiquevente;
+use App\Models\Historiquevente;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -303,7 +303,7 @@ class VenteController extends Controller
     if($vente->save()){
     
       foreach ($produits as $produit) {
-        $historiqueventes= new 	historiquevente();
+        $historiqueventes= new 	Historiquevente();
         $historiqueventes->vente_id=$vente->id;
         $historiqueventes->quantite_vendu=$produit['quantite'];
         $historiqueventes->produit_id= $produit['id'];

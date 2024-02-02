@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\historiquevente;
+use Exception;
 use Illuminate\Http\Request;
+use App\Models\historiquevente;
 
 class HistoriqueventeController extends Controller
 {
@@ -12,8 +13,37 @@ class HistoriqueventeController extends Controller
      */
     public function index()
     {
-        //
+            try {
+              return response()->json([
+                'status_code' => 200,
+                'status_message' => 'tous les historiquesventes ont été recupéré',
+                'data' => Historiquevente::all(),
+              ]);
+            } catch (Exception $e) {
+              return response()->json($e);
+            }
     }
+
+    public function listerhistoriqueparvente($vente_id)
+{
+    try {
+        $historiques = Historiquevente::where('vente_id', $vente_id)->get();
+
+        return response()->json([
+            'status_code' => 200,
+            'status_message' => 'Historiques de vente pour la vente_id '.$vente_id.' récupérés avec succès',
+            'data' => $historiques,
+        ]);
+    } catch (Exception $e) {
+        return response()->json([
+            'status_code' => 500,
+            'status_message' => 'Erreur lors de la récupération des historiques de vente',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
+    
 
     /**
      * Show the form for creating a new resource.

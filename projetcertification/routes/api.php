@@ -2,15 +2,16 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\AchatController;
 use App\Http\Controllers\API\VenteController;
 use App\Http\Controllers\API\ClientController;
 use App\Http\Controllers\API\FactureController;
 use App\Http\Controllers\API\ProduitController;
-use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\PayementController;
-use App\Http\Controllers\API\CategorieController;
 use App\Http\Controllers\TarificationController;
+use App\Http\Controllers\API\CategorieController;
+use App\Http\Controllers\HistoriqueventeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -171,6 +172,14 @@ Route::get('produits/lister', [ProduitController::class, 'index']);
 //afficher un produit
 Route::get('produit/detail/{id}', [ProduitController::class, 'show']);
 Route::post('whatsapp.userquincaillerie/{id}', [ClientController::class, 'redirigerWhatsApp']);
+
+
+
+//lister les cients
+Route::get('historiquevente/lister', [HistoriqueventeController::class, 'index']);
+
+
+Route::get('historiquevente/{vente_id}', [HistoriqueventeController::class, 'listerhistoriqueparvente']);
 
 
 // Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');

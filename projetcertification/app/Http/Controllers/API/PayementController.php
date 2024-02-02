@@ -7,7 +7,7 @@ use App\Models\Vente;
 use App\Models\Payement;
 use Illuminate\Http\Request;
 use openApi\Annotations as OA;
-use App\Models\historiquevente;
+use App\Models\Historiquevente;
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\Payement\EditPayementRequest;
@@ -113,7 +113,7 @@ public function listerpayementacompte()
   public function store(CreatePayementRequest $request,Payement $payement)
   {
       try {
-          $historiquevente = historiquevente::with('vente.client', 'produit')->find($request->historiquevente_id);
+          $historiquevente = Historiquevente::with('vente.client', 'produit')->find($request->historiquevente_id);
   
           if (!$historiquevente) {
               return response()->json([
@@ -293,7 +293,7 @@ public function listerpayementacompte()
  public function update(EditPayementRequest $request, Payement $payement)
  {
      try {
-         $historiquevente = historiquevente::with('vente.client', 'produit')->find($payement->historiquevente_id);
+         $historiquevente = Historiquevente::with('vente.client', 'produit')->find($payement->historiquevente_id);
  
          if (!$historiquevente) {
              return response()->json([
@@ -360,7 +360,7 @@ public function listerpayementacompte()
              ], 404);
          }
  
-         $historiquevente = historiquevente::with('vente.client', 'produit')->find($payement->historiquevente_id);
+         $historiquevente = Historiquevente::with('vente.client', 'produit')->find($payement->historiquevente_id);
  
          if (!$historiquevente) {
              return response()->json([
