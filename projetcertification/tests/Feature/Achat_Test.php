@@ -18,7 +18,7 @@ class Achat_Test extends TestCase
     {
         //ca permet à l'utilisateur de se connecter
         $user = User::factory()->create([
-            'telephone' => '+221768104340',
+            'telephone' => '+221768105340',
          ]);
         $this->actingAs($user);
         
@@ -37,7 +37,7 @@ class Achat_Test extends TestCase
 public function test_modifierachat(): void
 {
     $user = User::factory()->create([
-        'telephone' => '+221704220151',
+        'telephone' => '+221706220151',
     ]);
     $this->actingAs($user);
 
@@ -46,7 +46,7 @@ public function test_modifierachat(): void
     $response = $this->putjson(("api/achat/edit/{$achat->id}"), [
         'nomachat' => 'achatfer9',
         'prixachat' => '5000',
-        'montantachat' => '289078',
+        'montantachat' => '225000',
         'quantiteachat' => '45',
         'produit_id' => '2',
     ]);
@@ -57,7 +57,7 @@ public function test_modifierachat(): void
         'id' => $achat->id,
         'nomachat' => 'achatfer9',
         'prixachat' => '5000',
-        'montantachat' => '289078',
+        'montantachat' => '225000',
         'quantiteachat' => '45',
         'produit_id' => '2',
     ]);
@@ -67,7 +67,7 @@ public function test_modifierachat(): void
     public function test_listerachats(): void 
     {
          $user = User::factory()->create([
-            'telephone' => '+221776920343',
+            'telephone' => '+221776920043',
          ]);
         
            $this->actingAs($user);
@@ -78,16 +78,12 @@ public function test_modifierachat(): void
     public function test_supprimeachat()
     {
         $user = User::factory()->create([
-            'telephone' => '+2217741214143',
+            'telephone' => '+2217741214141',
          ]);
         $this->actingAs($user);
 
         $achat = Achat::factory()->create();
 
-        //  dd($produit->id);
-    
-    
-        // $this->withoutMiddleware();
             $response = $this->json('DELETE', url("api/achat/supprimer/{$achat->id}"));
     
             $response->assertStatus(200);

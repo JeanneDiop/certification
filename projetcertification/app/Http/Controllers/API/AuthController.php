@@ -30,26 +30,7 @@ class AuthController extends Controller
      */
 
 
-      /**
-     * Constructor function.
-     *
-     * @OA\Get(
-     *     path="/votre/chemin/d'authentification",
-     *     summary="Authentification requise",
-     *     description="Cette route nécessite une authentification pour accéder aux autres fonctionnalités de l'API.",
-     *     operationId="auth",
-     *     tags={"Authentification"},
-     *     security={{"api_key": {}}},
-     *     @OA\Response(
-     *         response=401,
-     *         description="Non autorisé. L'authentification est requise.",
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Authentifié avec succès.",
-     *     )
-     * )
-     */
+    
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['login','register']]);
@@ -60,7 +41,59 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
-
+/**
+ * @OA\Put(
+ *     path="/api/users/{id}/updatepassword",
+ *     operationId="updateUserPassword",
+ *     tags={"Users"},
+ *     summary="Mise à jour du mot de passe de l'utilisateur",
+ *     description="Mise à jour du mot de passe de l'utilisateur en fonction de l'ID",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID de l'utilisateur",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="password", type="string", format="password", description="Le nouveau mot de passe de l'utilisateur"),
+ *             @OA\Property(property="password_confirmation", type="string", format="password", description="Confirmation du nouveau mot de passe"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Mot de passe mis à jour avec succès",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status_code", type="integer", example=200),
+ *             @OA\Property(property="status_message", type="string", example="Mot de passe mis à jour avec succès"),
+ *             @OA\Property(property="data", type="object", description="Utilisateur mis à jour", ref="#/components/schemas/User"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Utilisateur non trouvé",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status_code", type="integer", example=404),
+ *             @OA\Property(property="status_message", type="string", example="Utilisateur non trouvé"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Échec de validation",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status_code", type="integer", example=422),
+ *             @OA\Property(property="status_message", type="string", example="Échec de validation"),
+ *             @OA\Property(property="errors", type="object", description="Liste des erreurs de validation", example={"password": {"Le champ mot de passe est requis."}}),
+ *         ),
+ *     ),
+ * )
+ */
 
     public function updatepassword(Request $request, $id)
 {
@@ -97,50 +130,41 @@ class AuthController extends Controller
         'data' => $user,
     ]);
 }
-
-     /**
+/**
  * @OA\Post(
  *     path="/api/login",
- *     tags={"Authentification"},
- *     summary="Connexion utilisateur",
- *     description="Connecte un utilisateur en utilisant les informations d'identification fournies.",
+ *     operationId="userLogin",
+ *     tags={"Authentication"},
+ *     summary="Authentification de l'utilisateur",
+ *     description="Authentification de l'utilisateur via email et mot de passe",
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             @OA\Property(property="email", type="string", format="email", description="Adresse e-mail de l'utilisateur"),
- *             @OA\Property(property="password", type="string", description="Mot de passe de l'utilisateur"),
- *         )
+ *             type="object",
+ *             @OA\Property(property="email", type="string", format="email", description="Adresse email de l'utilisateur"),
+ *             @OA\Property(property="password", type="string", format="password", description="Mot de passe de l'utilisateur"),
+ *         ),
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="Utilisateur connecté avec succès",
+ *         description="Authentification réussie",
  *         @OA\JsonContent(
  *             type="object",
- *             @OA\Property(property="user", ref="#/components/schemas/User"),
- *             @OA\Property(property="authorization", type="object",
- *                 @OA\Property(property="token", type="string", description="Jeton d'authentification (Bearer token)"),
- *                 @OA\Property(property="type", type="string", description="Type de jeton (bearer)"),
- *             ),
+ *             @OA\Property(property="token", type="string", description="Token d'authentification"),
+ *             @OA\Property(property="user", type="object", description="Informations sur l'utilisateur", ref="#/components/schemas/User"),
  *         ),
  *     ),
  *     @OA\Response(
  *         response=401,
- *         description="Non autorisé",
+ *         description="Échec de l'authentification",
  *         @OA\JsonContent(
  *             type="object",
- *             @OA\Property(property="error", type="string"),
- *         ),
- *     ),
- *     @OA\Response(
- *         response=422,
- *         description="Erreur de validation",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="error", type="object"),
+ *             @OA\Property(property="error", type="string", example="Unauthorized", description="Message d'erreur"),
  *         ),
  *     ),
  * )
  */
+
     public function login()
     {
         $email=request(['email']);
@@ -170,36 +194,33 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
-
-
-
-
-
      /**
- * @OA\Post(
- *     path="/api/logout",
- *     tags={"Authentification"},
- *     summary="Déconnexion utilisateur",
- *     description="Déconnecte l'utilisateur actuellement authentifié.",
- *     security={{"bearerAuth":{}}},
- *     @OA\Response(
- *         response=200,
- *         description="Déconnexion réussie",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="message", type="string", description="Message indiquant que la déconnexion a réussi"),
- *         ),
- *     ),
- *     @OA\Response(
- *         response=401,
- *         description="Non autorisé",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="error", type="string", description="Message d'erreur indiquant que l'utilisateur n'est pas authentifié"),
- *         ),
- *     ),
- * )
- */
+      * @OA\Post(
+      *     path="/api/logout",
+      *     operationId="userLogout",
+      *     tags={"Authentication"},
+      *     summary="Déconnexion de l'utilisateur",
+      *     description="Déconnexion de l'utilisateur authentifié",
+      *     security={{ "bearerAuth": {} }},
+      *     @OA\Response(
+      *         response=200,
+      *         description="Déconnexion réussie",
+      *         @OA\JsonContent(
+      *             type="object",
+      *             @OA\Property(property="message", type="string", example="Successfully logged out", description="Message de succès"),
+      *         ),
+      *     ),
+      *     @OA\Response(
+      *         response=401,
+      *         description="Non autorisé",
+      *         @OA\JsonContent(
+      *             type="object",
+      *             @OA\Property(property="error", type="string", example="Unauthorized", description="Message d'erreur"),
+      *         ),
+      *     ),
+      * )
+      */
+
     public function logout()
     {
         auth()->logout();
@@ -224,42 +245,46 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    
-     /**
- * @OA\Parameter(
- *     name="token",
- *     in="query",
- *     description="Jeton d'authentification (Bearer token)",
- *     required=true,
- *     @OA\Schema(type="string")
- * )
- *
- * @OA\Parameter(
- *     name="user",
- *     in="query",
- *     description="Objet utilisateur",
- *     required=true,
- *     @OA\Schema(ref="#/components/schemas/User")
- * )
+    /**
+ * @OA\schema(
+ *     schema="TokenResponse",
+ *     type="object",
+ *     @OA\Property(property="user", type="object", description="Informations sur l'utilisateur", ref="#/components/schemas/User"),
+ *     @OA\Property(property="access_token", type="string", description="Token d'authentification"),
+ *     @OA\Property(property="token_type", type="string", example="bearer", description="Type de token"),
+ *     @OA\Property(property="expires_in", type="integer", description="Durée de validité du token en secondes"),
+ * ),
  *
  * @OA\Post(
- *     path="/api/respondWithToken",
- *     tags={"Authentification"},
- *     summary="Réponse avec jeton d'authentification",
- *     description="Fournit une réponse avec le jeton d'authentification, l'utilisateur, le type de jeton et sa durée de validité.",
- *     @OA\Response(
- *         response=200,
- *         description="Réponse avec succès",
+ *     path="/api/login",
+ *     operationId="userLogin",
+ *     tags={"Authentication"},
+ *     summary="Authentification de l'utilisateur",
+ *     description="Authentification de l'utilisateur via email et mot de passe",
+ *     @OA\RequestBody(
+ *         required=true,
  *         @OA\JsonContent(
  *             type="object",
- *             @OA\Property(property="user", ref="#/components/schemas/User"),
- *             @OA\Property(property="access_token", type="string", description="Jeton d'authentification (Bearer token)"),
- *             @OA\Property(property="token_type", type="string", description="Type de jeton (bearer)"),
- *             @OA\Property(property="expires_in", type="integer", description="Durée de validité du jeton en secondes"),
+ *             @OA\Property(property="email", type="string", format="email", description="Adresse email de l'utilisateur"),
+ *             @OA\Property(property="password", type="string", format="password", description="Mot de passe de l'utilisateur"),
  *         ),
  *     ),
- * )
+ *     @OA\Response(
+ *         response=200,
+ *         description="Authentification réussie",
+ *         @OA\JsonContent(ref="#/components/schemas/TokenResponse"),
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Échec de l'authentification",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="error", type="string", example="Unauthorized", description="Message d'erreur"),
+ *         ),
+ *     ),
+ * ),
  */
+ 
     protected function respondWithToken($token,$user )
     {
         return response()->json([
@@ -270,51 +295,44 @@ class AuthController extends Controller
         ]);
     }
 
-
-
     /**
  * @OA\Post(
  *     path="/api/register",
- *     tags={"Utilisateurs"},
+ *     operationId="userRegister",
+ *     tags={"Users"},
  *     summary="Enregistrement d'un nouvel utilisateur",
- *     description="Enregistre un nouvel utilisateur avec les informations fournies.",
+ *     description="Enregistrement d'un nouvel utilisateur avec les informations fournies",
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
+ *             type="object",
  *             @OA\Property(property="nom", type="string", description="Nom de l'utilisateur"),
  *             @OA\Property(property="prenom", type="string", description="Prénom de l'utilisateur"),
- *             @OA\Property(property="email", type="string", format="email", description="Adresse e-mail de l'utilisateur"),
- *             @OA\Property(property="password", type="string", description="Mot de passe de l'utilisateur"),
+ *             @OA\Property(property="email", type="string", format="email", description="Adresse email de l'utilisateur"),
+ *             @OA\Property(property="password", type="string", format="password", description="Mot de passe de l'utilisateur"),
  *             @OA\Property(property="telephone", type="string", description="Numéro de téléphone de l'utilisateur"),
- *             @OA\Property(property="etat", type="string", description="État de l'utilisateur"),
+ *             @OA\Property(property="etat", type="string", description="État de l'utilisateur (actif, inactif, etc.)"),
  *             @OA\Property(property="adresse", type="string", description="Adresse de l'utilisateur"),
  *             @OA\Property(property="role_id", type="integer", description="ID du rôle de l'utilisateur"),
- *         )
+ *         ),
  *     ),
  *     @OA\Response(
  *         response=200,
  *         description="Utilisateur enregistré avec succès",
  *         @OA\JsonContent(
  *             type="object",
- *             @OA\Property(property="status_code", type="integer", description="Code de statut de la réponse"),
- *             @OA\Property(property="status_message", type="string", description="Message de statut de la réponse"),
- *             @OA\Property(property="data", ref="#/components/schemas/User"),
- *         ),
- *     ),
- *     @OA\Response(
- *         response=422,
- *         description="Erreur de validation",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="error", type="object"),
+ *             @OA\Property(property="status_code", type="integer", example=200),
+ *             @OA\Property(property="status_message", type="string", example="Utilisateur a été ajouté"),
+ *             @OA\Property(property="data", type="object", description="Informations sur l'utilisateur enregistré", ref="#/components/schemas/User"),
  *         ),
  *     ),
  *     @OA\Response(
  *         response=500,
- *         description="Erreur lors de l'enregistrement de l'utilisateur",
+ *         description="Erreur interne du serveur",
  *         @OA\JsonContent(
  *             type="object",
- *             @OA\Property(property="error", type="string"),
+ *             @OA\Property(property="status_code", type="integer", example=500),
+ *             @OA\Property(property="status_message", type="string", example="Erreur interne du serveur"),
  *         ),
  *     ),
  * )
@@ -354,33 +372,43 @@ class AuthController extends Controller
 
   /**
  * @OA\Get(
- *     path="/api/employees",
- *     tags={"Utilisateurs"},
- *     summary="Liste des employés avec le rôle_id égal à 2",
- *     description="Récupère la liste de tous les employés ayant le rôle avec l'ID égal à 2.",
- *     security={{"bearerAuth":{}}},
+ *     path="/api/users",
+ *     operationId="getUsersByRoleId",
+ *     tags={"Users"},
+ *     summary="Récupération des utilisateurs (employés) par role_id",
+ *     description="Récupération des utilisateurs ayant le role_id égal à 2 (employés)",
+ *     security={{ "bearerAuth": {} }},
  *     @OA\Response(
  *         response=200,
- *         description="Liste des employés récupérée avec succès",
+ *         description="Utilisateurs récupérés avec succès",
  *         @OA\JsonContent(
  *             type="object",
- *             @OA\Property(property="status_code", type="integer", description="Code de statut de la réponse"),
- *             @OA\Property(property="status_message", type="string", description="Message de statut de la réponse"),
- *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/User")),
+ *             @OA\Property(property="status_code", type="integer", example=200),
+ *             @OA\Property(property="status_message", type="string", example="Utilisateurs(employés) avec role_id = 2 récupérés"),
+ *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/User"), description="Liste des utilisateurs"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="Accès interdit",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status_code", type="integer", example=403),
+ *             @OA\Property(property="status_message", type="string", example="Vous n'avez pas la permission"),
  *         ),
  *     ),
  *     @OA\Response(
  *         response=500,
- *         description="Erreur lors de la récupération des employés",
+ *         description="Erreur interne du serveur",
  *         @OA\JsonContent(
  *             type="object",
- *             @OA\Property(property="status_code", type="integer", description="Code de statut de la réponse"),
- *             @OA\Property(property="status_message", type="string", description="Message de statut de la réponse"),
- *             @OA\Property(property="error", type="string", description="Message d'erreur détaillé"),
+ *             @OA\Property(property="status_code", type="integer", example=500),
+ *             @OA\Property(property="status_message", type="string", example="Erreur interne du serveur"),
  *         ),
  *     ),
  * )
  */
+
   public function index()
 {
   try 
@@ -406,6 +434,57 @@ class AuthController extends Controller
   
 }
 
+/**
+ * @OA\Get(
+ *     path="/api/users/{id}",
+ *     operationId="getUserById",
+ *     tags={"Users"},
+ *     summary="Récupération d'un utilisateur par ID",
+ *     description="Récupération d'un utilisateur en fonction de son ID",
+ *     security={{ "bearerAuth": {} }},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="ID de l'utilisateur",
+ *         @OA\Schema(type="string"),
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Utilisateur récupéré avec succès",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="user", type="object", description="Informations sur l'utilisateur", ref="#/components/schemas/User"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="Accès interdit",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status_code", type="integer", example=403),
+ *             @OA\Property(property="status_message", type="string", example="Vous n'avez pas la permission"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Utilisateur non trouvé",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="message", type="string", example="Désolé, pas de user trouvé."),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Erreur interne du serveur",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status_code", type="integer", example=500),
+ *             @OA\Property(property="status_message", type="string", example="Erreur interne du serveur"),
+ *         ),
+ *     ),
+ * )
+ */
 
 
 public function show(string $id)
@@ -429,59 +508,59 @@ public function show(string $id)
 
 /**
  * @OA\Put(
- *     path="/api/employees/{id}",
- *     tags={"Utilisateurs"},
- *     summary="Modifier un employé avec le rôle_id égal à 2",
- *     description="Modifie un utilisateur ayant le rôle avec l'ID égal à 2.",
- *     security={{"bearerAuth":{}}},
+ *     path="/api/users/{user}",
+ *     operationId="updateUser",
+ *     tags={"Users"},
+ *     summary="Modification d'un utilisateur",
+ *     description="Modification des informations d'un utilisateur",
+ *     security={{ "bearerAuth": {} }},
  *     @OA\Parameter(
- *         name="id",
+ *         name="user",
  *         in="path",
  *         required=true,
- *         description="ID de l'utilisateur à modifier",
+ *         description="ID de l'utilisateur",
  *         @OA\Schema(type="integer"),
  *     ),
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             @OA\Property(property="nom", type="string", description="Nouveau nom de l'utilisateur"),
- *             @OA\Property(property="prenom", type="string", description="Nouveau prénom de l'utilisateur"),
- *             @OA\Property(property="email", type="string", format="email", description="Nouvelle adresse e-mail de l'utilisateur"),
- *             @OA\Property(property="password", type="string", description="Nouveau mot de passe de l'utilisateur"),
- *             @OA\Property(property="telephone", type="string", description="Nouveau numéro de téléphone de l'utilisateur"),
- *             @OA\Property(property="etat", type="string", description="Nouvel état de l'utilisateur"),
- *             @OA\Property(property="adresse", type="string", description="Nouvelle adresse de l'utilisateur"),
- *             @OA\Property(property="role_id", type="integer", description="Nouvel ID du rôle de l'utilisateur"),
- *         )
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Utilisateur modifié avec succès",
- *         @OA\JsonContent(
  *             type="object",
- *             @OA\Property(property="status_code", type="integer", description="Code de statut de la réponse"),
- *             @OA\Property(property="status_message", type="string", description="Message de statut de la réponse"),
- *             @OA\Property(property="data", ref="#/components/schemas/User"),
+ *             @OA\Property(property="nom", type="string", description="Nom de l'utilisateur"),
+ *             @OA\Property(property="prenom", type="string", description="Prénom de l'utilisateur"),
+ *             @OA\Property(property="email", type="string", format="email", description="Adresse email de l'utilisateur"),
+ *             @OA\Property(property="password", type="string", format="password", description="Mot de passe de l'utilisateur"),
+ *             @OA\Property(property="telephone", type="string", description="Numéro de téléphone de l'utilisateur"),
+ *             @OA\Property(property="adresse", type="string", description="Adresse de l'utilisateur"),
+ *             @OA\Property(property="etat", type="string", description="État de l'utilisateur (actif, inactif, etc.)"),
+ *             @OA\Property(property="role_id", type="integer", description="ID du rôle de l'utilisateur"),
  *         ),
  *     ),
  *     @OA\Response(
- *         response=404,
- *         description="Utilisateur non trouvé",
+ *         response=200,
+ *         description="Modification du compte enregistré avec succès",
  *         @OA\JsonContent(
  *             type="object",
- *             @OA\Property(property="status_code", type="integer", description="Code de statut de la réponse"),
- *             @OA\Property(property="status_message", type="string", description="Message de statut de la réponse"),
- *             @OA\Property(property="error", type="string", description="Message d'erreur indiquant que l'utilisateur n'a pas été trouvé"),
+ *             @OA\Property(property="status_code", type="integer", example=200),
+ *             @OA\Property(property="status_message", type="string", example="Modification du compte enregistré"),
+ *             @OA\Property(property="user", type="object", description="Informations sur l'utilisateur modifié", ref="#/components/schemas/User"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="Accès interdit",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status_code", type="integer", example=403),
+ *             @OA\Property(property="status_message", type="string", example="Vous n'avez pas la permission de modifier cet utilisateur"),
  *         ),
  *     ),
  *     @OA\Response(
  *         response=500,
- *         description="Erreur lors de la modification de l'utilisateur",
+ *         description="Erreur interne du serveur",
  *         @OA\JsonContent(
  *             type="object",
- *             @OA\Property(property="status_code", type="integer", description="Code de statut de la réponse"),
- *             @OA\Property(property="status_message", type="string", description="Message de statut de la réponse"),
- *             @OA\Property(property="error", type="string", description="Message d'erreur détaillé"),
+ *             @OA\Property(property="status_code", type="integer", example=500),
+ *             @OA\Property(property="status_message", type="string", example="Erreur interne du serveur"),
  *         ),
  *     ),
  * )
@@ -521,49 +600,49 @@ public function update(EditUserRequest $request, User $user)
 
 /**
  * @OA\Put(
- *     path="/api/archiver/{id}",
- *     tags={"Utilisateurs"},
- *     summary="Désactiver un compte utilisateur",
- *     description="Désactive le compte d'un utilisateur par un administrateur.",
- *     security={{"bearerAuth":{}}},
+ *     path="/api/users/{user}/archiver",
+ *     operationId="archiverUser",
+ *     tags={"Users"},
+ *     summary="Activation/Désactivation d'un utilisateur",
+ *     description="Activation/Désactivation d'un utilisateur en fonction de son état actuel",
+ *     security={{ "bearerAuth": {} }},
  *     @OA\Parameter(
- *         name="id",
+ *         name="user",
  *         in="path",
  *         required=true,
- *         description="ID de l'utilisateur à désactiver",
+ *         description="ID de l'utilisateur",
  *         @OA\Schema(type="integer"),
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="Désactivation du compte réussie",
+ *         description="Activation/Désactivation du compte réussie",
  *         @OA\JsonContent(
  *             type="object",
- *             @OA\Property(property="status_code", type="integer", description="Code de statut de la réponse"),
- *             @OA\Property(property="status_message", type="string", description="Message de statut de la réponse"),
+ *             @OA\Property(property="status_code", type="integer", example=200),
+ *             @OA\Property(property="status_message", type="string", example="Activation/Désactivation du compte réussie"),
+ *             @OA\Property(property="user", type="object", description="Informations sur l'utilisateur", ref="#/components/schemas/User"),
  *         ),
  *     ),
  *     @OA\Response(
  *         response=403,
- *         description="Permission refusée",
+ *         description="Accès interdit",
  *         @OA\JsonContent(
  *             type="object",
- *             @OA\Property(property="status_code", type="integer", description="Code de statut de la réponse"),
- *             @OA\Property(property="status_message", type="string", description="Message de statut de la réponse"),
+ *             @OA\Property(property="status_code", type="integer", example=403),
+ *             @OA\Property(property="status_message", type="string", example="Vous n'avez pas la permission de désactiver des comptes"),
  *         ),
  *     ),
  *     @OA\Response(
  *         response=500,
- *         description="Erreur lors de la désactivation du compte",
+ *         description="Erreur interne du serveur",
  *         @OA\JsonContent(
  *             type="object",
- *             @OA\Property(property="status_code", type="integer", description="Code de statut de la réponse"),
- *             @OA\Property(property="status_message", type="string", description="Message de statut de la réponse"),
- *             @OA\Property(property="error", type="string", description="Message d'erreur détaillé"),
+ *             @OA\Property(property="status_code", type="integer", example=500),
+ *             @OA\Property(property="status_message", type="string", example="Erreur interne du serveur"),
  *         ),
  *     ),
  * )
  */
-
 
 public function archiver(User $user)
 {

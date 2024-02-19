@@ -1,45 +1,49 @@
-services:
-  database:
-    image: mysql:8.2
-    container_name: mysql_laravel
-    volumes:
-      - volume_db:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: admin
-      MYSQL_DATABASE: projetcertification
-    ports:
-      - 8002:3306
-    networks:
-      - monreseau
+version: '3.9'
 
-  phpmyadmin:
-    image: phpmyadmin
-    container_name: phpmyadmin_laravel
-    ports:
-      - 9000:80
-    environment:
-      MYSQL_ROOT_PASSWORD: admin
-      PMA_HOST: database
-    networks:
-      - monreseau
-    depends_on:
-      - database
-  certif_docker:
-    build:
-      context: .
-      dockerfile: Docker/Dockerfile
-    container_name: certif_docker
+services:
+
+  rapid_stock:
+    build: docker/php
+    container_name: rapid-stock
+    image: jeanne/rapid_stock:1.0
     restart: always
     ports:
-      - "8003:80"
+      - 8011:80
     volumes:
-      - .:/var/www/html
+      - ./docker/php/vhosts:/etc/apache2/sites-enabled
+      - ./:/var/www/html
     depends_on:
       - phpmyadmin
     networks:
-      - monreseau
+      - reseau_rapid_stock
+      
+  database:
+    image: mysql:8.2
+    container_name: mysql_rapid_stock
+    volumes:
+      - volume_db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: jeanne
+      MYSQL_DATABASE: rapid_stock
+    ports:
+      - 8003:3306
+    networks:
+      - reseau_rapid_stock
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin-rapid_stock
+    ports:
+      - 8080:80
+    environment:
+      MYSQL_ROOT_PASSWORD: jeanne
+      PMA_HOST: database
+    networks:
+      - reseau_rapid_stock
+    depends_on:
+      - database
 
 volumes:
   volume_db:
 networks:
-  monreseau:
+  reseau_rapid_stock:

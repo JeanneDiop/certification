@@ -23,31 +23,26 @@ class CreateFactureRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-  
+
     {
         return [
-            'numerofacture' => [
-                'required',
-                'regex:/^[A-Z]{2}\d{5}$/'
-            ],
-            'payement_id' => 'integer|required',
+            'payement_id' => 'required|exists:payements,id',
         ];
     }
 
     public function messages()
     {
         return [
-            'numerofacture.required' => 'Le champ numerofacture est requis.',
-            'numerofacture.regex' => 'Le champ numerofacture doit contenir deux lettres majuscules suivies de cinq chiffres.',
-            'payement_id.integer' => 'Le champ "payement_id" doit être un entier.',
+           'payement_id.integer' => 'Le champ "payement_id" doit être un entier.',
+           'payement_id.exists' => 'Ce paiement n\'existe pas'
         ];
     }
-      
+
             protected function failedValidation(Validator $validator)
             {
                 // Si la validation échoue, vous pouvez accéder aux erreurs
                 $errors = $validator->errors()->toArray();
-        
+
                 // Retournez les erreurs dans la réponse JSON
                 throw new HttpResponseException(response()->json(['errors' => $errors], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
             }

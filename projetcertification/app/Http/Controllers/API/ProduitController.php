@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use openApi\Annotations as OA;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\ProduitRupture;
 use App\Http\Requests\Produit\EditProduitRequest;
 use App\Http\Requests\Produit\CreateProduitRequest;
 /**
@@ -148,6 +149,7 @@ if($produit->isEmpty()){
             try
          {
             if (Auth::check()) {
+                $user = Auth::user();
                 // Utilisateur connecté, effectuez l'action
                 $produit = new Produit();
                 $produit->nomproduit = $request->nomproduit;
@@ -157,9 +159,8 @@ if($produit->isEmpty()){
                 $produit->quantiteseuil = $request->quantiteseuil;
                 $produit->etat = $request->etat;
                 $produit->categorie_id = $request->categorie_id;
+                // $user->notify(new ProduitRupture($produit));
                 $produit->save();
-
-
                 return response()->json([
                     'status_code' => 200,
                     'status_message' => 'produit a été ajouté',
@@ -179,50 +180,6 @@ if($produit->isEmpty()){
     /**
      * Display the specified resource.
      */
-
-
-     /**
- * @OA\Get(
- *      path="/api/produits/{id}",
- *      operationId="getProduitById",
- *      tags={"Produits"},
- *      summary="Obtenir un produit par ID",
- *      description="Retourne un produit spécifié par son identifiant.",
- *      @OA\Parameter(
- *          name="id",
- *          required=true,
- *          in="path",
- *          description="ID du produit",
- *          @OA\Schema(type="string")
- *      ),
- *      @OA\Response(
- *          response=200,
- *          description="Opération réussie",
- *          @OA\JsonContent(ref="#/components/schemas/Produit"),
- *      ),
- *      @OA\Response(
- *          response=404,
- *          description="Produit non trouvé",
- *          @OA\JsonContent(
- *              @OA\Property(property="message", type="string", example="Désolé, pas de produit trouvé."),
- *          ),
- *      ),
- *      @OA\Response(
- *          response=500,
- *          description="Erreur interne du serveur",
- *          @OA\JsonContent(
- *              @OA\Property(property="message", type="string", example="Internal Server Error"),
- *          ),
- *      ),
- * )
- *
- * Obtient un produit par ID.
- *
- * Cette fonction retourne un produit spécifié par son identifiant.
- *
- * @param  string  $id
- * @return \Illuminate\Http\JsonResponse
- */
     public function show(string $id)
     {
         try {

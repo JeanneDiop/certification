@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('factures', function (Blueprint $table) {
             $table->id();
             $table->string('numerofacture')->unique();
+            $table->integer('montantVerser');
             $table->foreignIdFor(Payement::class)->constrained()->onDelete('cascade');
             $table->timestamps();
         });

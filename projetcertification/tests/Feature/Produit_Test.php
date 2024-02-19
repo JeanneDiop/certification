@@ -18,7 +18,7 @@ class Produit_Test extends TestCase
         {
             //ca permet à l'utilisateur de se connecter
             $user = User::factory()->create([
-                'telephone' => '+221788304343',
+                'telephone' => '+221789304343',
              ]);
             $this->actingAs($user);
             

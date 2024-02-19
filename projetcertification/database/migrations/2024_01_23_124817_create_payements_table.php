@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('payements', function (Blueprint $table) {
             $table->id();
-            $table->string('historiquevente_id');
+            $table->foreignId('vente_id');
             $table->string('montant_payement');
             $table->string('montant_restant');
             $table->enum('etat', ['acompte', 'comptant'])->default('comptant');
             $table->timestamps();
+
         });
     }
 

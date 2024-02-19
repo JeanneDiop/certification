@@ -34,28 +34,19 @@ use App\Http\Controllers\HistoriqueventeController;
 
 // Route::get('/login', function(){
 //     return response()->json([
-//         'error' => 'Unauthenticated', 
+//         'error' => 'Unauthenticated',
 //     ], 401);
 // })->name('login');
-// Tous les users peuvent se connecter 
+// Tous les users peuvent se connecter
 Route::group(['middleware' => 'api'], function ($router) {
 Route::post('logout', [AuthController::class, 'logout']);
 // Route::post('refresh', [AuthController::class, 'refresh']);
-  
+
 });
 
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
-
-
-
-
-
-
-
-
-
 
 //MIDLEWARE ou tout utilisateur connecté pourra avoir l'accés
 
@@ -79,7 +70,8 @@ Route::get('vente/lister', [VenteController::class, 'index']);
 Route::get('vente/detail/{id}', [VenteController::class, 'show']);
 //supprimer  vente
 Route::delete('vente/supprimer/{id}', [VenteController::class, 'destroy']);
-
+//recuperer les 5 dernier vente
+Route::get('vente/derniereVente', [VenteController::class, 'dernieresVentes']);
 //lister les historiques
 Route::get('historiquevente/lister', [HistoriqueventeController::class, 'index']);
 //lister l'historiquevente avec l'id de la vente
@@ -105,14 +97,18 @@ Route::post('facture/create', [FactureController::class, 'store']);
 Route::delete('facture/supprimer/{id}', [FactureController::class, 'destroy']);
 //lister les factures
 Route::get('facture/lister', [FactureController::class, 'index']);
-//afficher facture
+//afficher les details d'une facture
 Route::get('facture/detail/{id}', [FactureController::class, 'show']);
+//afficher facture par vente
+Route::get('facture/vente/{id}', [FactureController::class, 'getFactureByIdvente']);
+//voir facture
+Route::get('facture/{facture}', [FactureController::class, 'getFactureById']);
 
 
 //ajouter payement
-Route::post('payement/create', [PayementController::class, 'store']);
+Route::post('payement/create/{vente}', [PayementController::class, 'store']);
 //modifier  payement
- Route::put('payement/edit/{payement}', [PayementController::class, 'update']);
+ Route::post('payement/edit/{vente}', [PayementController::class, 'update']);
 //supprimer  payement
 Route::delete('payement/supprimer/{id}', [PayementController::class, 'supprimer']);
 Route::delete('supprimer/payement/{etat}', [PayementController::class, 'destroy']);
@@ -135,7 +131,7 @@ Route::put('categorie/edit/{id}', [CategorieController::class, 'update']);
 Route::get('categorie/lister', [CategorieController::class, 'index']);
 //afficher un categorie
 Route::get('categorie/detail/{id}', [CategorieController::class, 'show']);
- 
+
 
  //ajouter Achat
  Route::post('achat/create', [AchatController::class, 'store']);
@@ -152,7 +148,7 @@ Route::get('categorie/detail/{id}', [CategorieController::class, 'show']);
 
 //MIDLEWARE PROPRIETAIRE
 
-Route::middleware(['auth:api','role_proprietaire'])->group(function() { 
+Route::middleware(['auth:api','role_proprietaire'])->group(function() {
 
 //modifier employé
 Route::put('employe/edit/{user}', [AuthController::class, 'update']);

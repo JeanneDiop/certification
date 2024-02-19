@@ -36,7 +36,7 @@ class CreateProduitRequest extends FormRequest
             'categorie_id' => 'required|integer',
         ];
     }
-    
+
     public function messages()
     {
         return [
@@ -49,7 +49,7 @@ class CreateProduitRequest extends FormRequest
             'categorie_id.integer' => 'Le champ categorie_id doit être un entier.'
         ];
     }
-    
+
 
     protected function failedValidation(Validator $validator)
     {
@@ -59,5 +59,5 @@ class CreateProduitRequest extends FormRequest
         // Retournez les erreurs dans la réponse JSON
         throw new HttpResponseException(response()->json(['errors' => $errors], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
     }
-        
+
 }

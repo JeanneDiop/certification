@@ -17,11 +17,11 @@ class ClientFactory extends Factory
     public function definition(): array
     {
        
-        return[
+        return [
             'nom' => $this->faker->word,
             'prenom' => $this->faker->word,
-            'code_client' => 'N52765',
-            'telephone' => '+221765003208',
+            'code_client' => 'T00043',
+            'telephone' => '+221769852450',
             'adresse' => $this->faker->word,
         ];
     }

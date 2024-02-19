@@ -17,9 +17,9 @@ class UserSeeder extends Seeder
         User::create([
             'nom' => 'diop',
             'prenom' =>'jeanne' ,
-            'email' => 'jeanne@gmail.com',
+            'email' => 'diopj@gmail.com',
             'password' => Hash::make('azerty12'),
-            'telephone' => '+221777973782',
+            'telephone' => '+221764973782',
             'etat' => 'actif',
             'adresse' => 'sicap',
             'role_id' => 1,

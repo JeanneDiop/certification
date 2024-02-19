@@ -19,7 +19,7 @@ class Auth_Test extends TestCase
         //Création d'un utilisateur avec une factory
       
         $user = User::factory()->create([
-            'telephone' => '+221770724341',
+            'telephone' => '+221770510043',
          ]);
         
 
@@ -28,19 +28,16 @@ class Auth_Test extends TestCase
         $response = $this->json('POST','api/register', $user->toArray());
        //Assertion du statut de la réponse
         $response->assertStatus(200);
-
    
     }
-
-    
-    
     public function test_connexion()
     {
-        $userexist =User::where('email','jeanne@gmail.com')->first();
+        $userexist =User::where('email','diopj@gmail.com')->first();
 
         $response = $this->postJson('api/login',[
-            'email' => 'jeanne@gmail.com',
-            'password' => 'azerty12'
+            'email' => 'diopj@gmail.com',
+            'password' => 'azerty12',
+           
         ]);
          //verification
         $response->assertStatus(200);
@@ -50,7 +47,7 @@ class Auth_Test extends TestCase
     {
     
             // Rechercher l'utilisateur
-            $user = User::where('email', 'jeanne@gmail.com')->first();
+            $user = User::where('email', 'diopj@gmail.com')->first();
             if (!$user) {
                 $this->fail('Utilisateur non trouvé');
             }

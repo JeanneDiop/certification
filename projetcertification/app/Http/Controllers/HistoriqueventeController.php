@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Facture;
 use Exception;
 use App\Models\Vente;
 use Illuminate\Http\Request;
 use App\Models\historiquevente;
+use App\Models\Payement;
 
 class HistoriqueventeController extends Controller
 {
@@ -30,6 +32,11 @@ class HistoriqueventeController extends Controller
     try {
         $historiques = Historiquevente::where('vente_id', $vente_id)->get();
         $vente = Vente::findOrFail($vente_id);
+        $factures=0;
+        $paiment=Payement::where('vente_id',$vente_id)->first();
+        if($paiment){
+            $factures=Facture::where('payement_id',$paiment->id)->get();
+        }
 
         $client_id = $vente->client_id;
 
@@ -39,6 +46,7 @@ class HistoriqueventeController extends Controller
             'data' => [
                 'historiques' => $historiques,
                 'client_id' => $client_id,
+                'factures' => $factures,
             ],
         ]);
     } catch (Exception $e) {
@@ -50,7 +58,7 @@ class HistoriqueventeController extends Controller
     }
 }
 
-    
+
 
     /**
      * Show the form for creating a new resource.

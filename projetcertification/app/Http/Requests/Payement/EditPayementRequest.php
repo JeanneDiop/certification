@@ -26,7 +26,7 @@ class EditPayementRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'historiquevente_id' => 'required|string',
+            'vente_id' => 'required|string',
             // 'montant_payement' => 'required|numeric',
             'etat' => 'required|in:comptant,acompte', // Ajoutez la validation pour 'comptant' ou 'acompte'
         ];
@@ -35,7 +35,7 @@ class EditPayementRequest extends FormRequest
     public function messages()
     {
         return [
-            'historiquevente_id.required' => 'Le champ vente_id est requis.',
+            'vente_id.required' => 'Le champ vente_id est requis.',
             // 'montant_payement.required' => 'Le champ montant payement est requis.',
             // 'montant_payement.numeric' => 'Le champ montant payement doit être un nombre.',
             'etat.required' => 'Le champ état est requis.',

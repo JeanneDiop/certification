@@ -9,13 +9,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Payement extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'montant_payement',
+        'vente_id',
+        'etat',
+        'montant_restant'
+     
+    ];
     public function vente()
     {
         return $this->belongsTo(Vente::class, 'vente_id');
-    }
-
-    public function facture()
-    {
-        return $this->hasMany(Facture::class);
     }
 }

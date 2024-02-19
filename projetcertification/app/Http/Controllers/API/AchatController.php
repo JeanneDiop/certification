@@ -15,38 +15,13 @@ use App\Http\Requests\Achat\SupprimerAchatRequest;
 
 /**
  
-*@OA\Info(title="endpointCandidature", version="0.1")*/
+*@OA\Info(title="endpointAchat", version="0.1")*/
 class AchatController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
 
-     /**
- * @OA\Get(
- *      path="/api/achats",
- *      operationId="getAchats",
- *      tags={"Achats"},
- *      summary="Obtenir la liste de tous les achats",
- *      description="Retourne la liste de tous les achats",
- *      @OA\Response(
- *          response=200,
- *          description="Opération réussie",
- *          @OA\JsonContent(
- *              @OA\Property(property="status_code", type="integer", example=200),
- *              @OA\Property(property="status_message", type="string", example="tous les achats ont été récupérés"),
- *              @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Achat")),
- *          ),
- *      ),
- *      @OA\Response(
- *          response=500,
- *          description="Erreur interne du serveur",
- *          @OA\JsonContent(
- *              @OA\Property(property="message", type="string", example="Internal Server Error"),
- *          ),
- *      ),
- * )
- */
     public function index()
     {
         try {
@@ -69,41 +44,14 @@ class AchatController extends Controller
 //      * Store a newly created resource in storage.
 //      */
 
-//      /**
-//  * @OA\Post(
-//  *      path="/api/achats",
-//  *      operationId="createAchat",
-//  *      tags={"Achats"},
-//  *      summary="Ajouter un nouvel achat",
-//  *      description="Ajoute un nouvel achat à la base de données",
-//  *      @OA\RequestBody(
-//  *          required=true,
-//  *          @OA\JsonContent(ref="#/components/schemas/CreateAchatRequest"),
-//  *      ),
-//  *      @OA\Response(
-//  *          response=200,
-//  *          description="Opération réussie",
-//  *          @OA\JsonContent(
-//  *              @OA\Property(property="status_code", type="integer", example=200),
-//  *              @OA\Property(property="status_message", type="string", example="Achat ajouté avec succès"),
-//  *              @OA\Property(property="data", type="object", ref="#/components/schemas/Achat"),
-//  *          ),
-//  *      ),
-//  *      @OA\Response(
-//  *          response=500,
-//  *          description="Erreur interne du serveur",
-//  *          @OA\JsonContent(
-//  *              @OA\Property(property="message", type="string", example="Internal Server Error"),
-//  *          ),
-//  *      ),
-//  * )
-//  */
+
     public function store(CreateAchatRequest $request)
     {
-            try 
+        try 
           {
           
                 $achat = new Achat();
+
                 $achat->montantachat=($request->prixachat*$request->quantiteachat);
                 $achat->nomachat= $request->nomachat;
                 $achat->prixachat= $request->prixachat;
@@ -138,53 +86,15 @@ class AchatController extends Controller
             
             } catch (Exception $e) {
               return response()->json($e);
-            } 
+          } 
           
-          }
-
-
-
-
-
-
+        }
 
     
     /**
      * Display the specified resource.
      */
 
-     /**
- * @OA\Get(
- *      path="/api/achats/{id}",
- *      operationId="getAchatById",
- *      tags={"Achats"},
- *      summary="Obtenir les détails d'un achat",
- *      description="Retourne les détails d'un achat en fonction de l'ID spécifié",
- *      @OA\Parameter(
- *          name="id",
- *          in="path",
- *          required=true,
- *          description="ID de l'achat",
- *          @OA\Schema(type="string"),
- *      ),
- *      @OA\Response(
- *          response=200,
- *          description="Opération réussie",
- *          @OA\JsonContent(
- *              @OA\Property(property="status_code", type="integer", example=200),
- *              @OA\Property(property="status_message", type="string", example="Détails de l'achat récupérés avec succès"),
- *              @OA\Property(property="data", type="object", ref="#/components/schemas/Achat"),
- *          ),
- *      ),
- *      @OA\Response(
- *          response=404,
- *          description="Achat non trouvé",
- *          @OA\JsonContent(
- *              @OA\Property(property="message", type="string", example="Désolé, pas d'achat trouvé."),
- *          ),
- *      ),
- * )
- */
     public function show(string $id)
     {
         try {
@@ -200,42 +110,7 @@ class AchatController extends Controller
      * Show the form for editing the specified resource.
      */
 
-     /**
- * @OA\Patch(
- *      path="/api/achats/{achat}",
- *      operationId="editAchat",
- *      tags={"Achats"},
- *      summary="Modifier un achat existant",
- *      description="Modifie un achat existant dans la base de données",
- *      @OA\Parameter(
- *          name="achat",
- *          in="path",
- *          required=true,
- *          description="ID de l'achat à modifier",
- *          @OA\Schema(type="integer"),
- *      ),
- *      @OA\RequestBody(
- *          required=true,
- *          @OA\JsonContent(ref="#/components/schemas/EditAchatRequest"),
- *      ),
- *      @OA\Response(
- *          response=200,
- *          description="Opération réussie",
- *          @OA\JsonContent(
- *              @OA\Property(property="status_code", type="integer", example=200),
- *              @OA\Property(property="status_message", type="string", example="Achat modifié avec succès"),
- *              @OA\Property(property="data", type="object", ref="#/components/schemas/Achat"),
- *          ),
- *      ),
- *      @OA\Response(
- *          response=500,
- *          description="Erreur interne du serveur",
- *          @OA\JsonContent(
- *              @OA\Property(property="message", type="string", example="Internal Server Error"),
- *          ),
- *      ),
- * )
- */
+ 
     public function update(EditAchatRequest $request, Achat $achat)
     {
          
@@ -280,43 +155,6 @@ class AchatController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-
-     /**
- * @OA\Patch(
- *      path="/api/achats/{achat}",
- *      operationId="editAchat",
- *      tags={"Achats"},
- *      summary="Modifier un achat existant",
- *      description="Modifie un achat existant dans la base de données",
- *      @OA\Parameter(
- *          name="achat",
- *          in="path",
- *          required=true,
- *          description="ID de l'achat à modifier",
- *          @OA\Schema(type="integer"),
- *      ),
- *      @OA\RequestBody(
- *          required=true,
- *          @OA\JsonContent(ref="#/components/schemas/EditAchatRequest"),
- *      ),
- *      @OA\Response(
- *          response=200,
- *          description="Opération réussie",
- *          @OA\JsonContent(
- *              @OA\Property(property="status_code", type="integer", example=200),
- *              @OA\Property(property="status_message", type="string", example="Achat modifié avec succès"),
- *              @OA\Property(property="data", type="object", ref="#/components/schemas/Achat"),
- *          ),
- *      ),
- *      @OA\Response(
- *          response=500,
- *          description="Erreur interne du serveur",
- *          @OA\JsonContent(
- *              @OA\Property(property="message", type="string", example="Internal Server Error"),
- *          ),
- *      ),
- * )
- */
 public function destroy(SupprimerAchatRequest $request, Achat $achat)
 {
     try {

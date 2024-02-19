@@ -26,7 +26,12 @@ class Vente extends Model
 
     public function historiquevente()
     {
-        return $this->hasMany(HistoriqueVente::class);
+        return $this->hasMany(Historiquevente::class);
+    }
+
+    public function payement()
+    {
+        return $this->hasMany(Payement::class);
     }
 }
 
