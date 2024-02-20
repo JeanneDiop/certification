@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Notifications\ProduitRupture;
 use App\Http\Requests\Produit\EditProduitRequest;
 use App\Http\Requests\Produit\CreateProduitRequest;
+use Illuminate\Notifications\DatabaseNotification;
 /**
  
 *@OA\Info(title="endpointProduit", version="0.1")*/
@@ -341,6 +342,39 @@ if($produit->isEmpty()){
           return response()->json($e);
         }
       
+        }
+
+        public function listerNotification()
+        {
+            $notification = DatabaseNotification::where('read_at', null)->get();;
+    
+            if ($notification == null) {
+                return response()->json([
+                    'message' => "Notification inexistante"
+                ], 400);
+            }
+    
+    
+            return response()->json([
+                'Notification' => $notification
+            ], 200);
+        }
+    
+        public function verifnotification(string $id)
+        {
+            $notification = DatabaseNotification::find($id);
+    
+            if ($notification == null) {
+                return response()->json([
+                    'message' => "Notification inexistante"
+                ], 400);
+            }
+    
+            $notification->markAsRead();
+    
+            return response()->json([
+                'message' => "Notification marquée comme lue avec succès"
+            ], 200);
         }
 
  }

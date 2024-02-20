@@ -51,6 +51,11 @@ Route::post('register', [AuthController::class, 'register']);
 //MIDLEWARE ou tout utilisateur connecté pourra avoir l'accés
 
 Route::middleware(['auth:api'])->group(function () {
+
+   //notification
+   Route::get('notification/lister', [ProduitController::class, 'listerNotification']);
+   //notification
+   Route::put('notification/read/{id}', [ProduitController::class, 'verifnotification']);
 //ajouter Produit
 Route::post('produit/create', [ProduitController::class, 'store']);
 //modifier un  Produit

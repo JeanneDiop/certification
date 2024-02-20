@@ -7,16 +7,17 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ProduitRupture extends Notification
+class NotifProduit extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    protected $produitfini;
+    public function __construct($produitfini)
     {
-        //
+        $this->produitfini=$produitfini;
     }
 
     /**
@@ -26,7 +27,7 @@ class ProduitRupture extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['database'];
     }
 
     /**
@@ -35,11 +36,9 @@ class ProduitRupture extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->from('laraveljym@gmail.com')
-                    ->line('Bonjour cher administrateur, votre produit est en niveau de stock critique. Veuillez penser à vous approvisionner.')
-                    ->action('Retrouvez plus d\'informations , concernant votre niveau de stock', url('/categorie/list'))
-                    ->greeting('Merci pour votre commande, ' . $notifiable->name . '!')
-                    ->line('Merci pour votre attention!'); 
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**
@@ -50,7 +49,9 @@ class ProduitRupture extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'Messages'=>'Lancer un commande pour le produit:',
+            'produit'=>$this->produitfini->nomproduit,
+            'quantiterestant'=>$this->produitfini->quantite
         ];
     }
 }
