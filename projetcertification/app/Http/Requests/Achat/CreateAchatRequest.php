@@ -27,7 +27,7 @@ class CreateAchatRequest extends FormRequest
         return [
             'prixachat' => 'required|numeric', 
             // 'montantachat' => 'required|numeric',
-            'quantiteachat' => 'required|numeric',
+            'quantiteachat' => 'required|numeric|gt:0',
             'nomachat' => 'required|string', 
             'produit_id' => 'required|integer', 
         ];
@@ -38,6 +38,7 @@ class CreateAchatRequest extends FormRequest
         return [
             'quantiteachat.required' => 'Le champ "quantiteachat" est obligatoire.',
             'quantiteachat.numeric' => 'Le champ "quantiteachat" doit être un nombre (entier ou décimal).',
+            'quantiteachat.gt' => 'Le champ quantiteachat doit être supérieur à zéro ca exclut les valeurs negatifs.',
             'prixachat.required' => 'Le champ "prixachat" est obligatoire.',
             'prixachat.numeric' => 'Le champ "prixachat" doit être un nombre (entier ou décimal).',
             // 'montantachat.required' => 'Le champ "montantachat" est obligatoire.',

@@ -9,21 +9,9 @@ use App\Http\Controllers\API\ClientController;
 use App\Http\Controllers\API\FactureController;
 use App\Http\Controllers\API\ProduitController;
 use App\Http\Controllers\API\PayementController;
-use App\Http\Controllers\TarificationController;
 use App\Http\Controllers\API\CategorieController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\HistoriqueventeController;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
 
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
    // return $request->user();
@@ -40,7 +28,7 @@ use App\Http\Controllers\HistoriqueventeController;
 // Tous les users peuvent se connecter
 Route::group(['middleware' => 'api'], function ($router) {
 Route::post('logout', [AuthController::class, 'logout']);
-// Route::post('refresh', [AuthController::class, 'refresh']);
+Route::post('refresh', [AuthController::class, 'refresh']);
 
 });
 
@@ -62,8 +50,7 @@ Route::post('produit/create', [ProduitController::class, 'store']);
 Route::put('produit/edit/{id}', [ProduitController::class, 'update']);
  //supprimer un produit
 Route::delete('produit/supprimer/{id}', [ProduitController::class, 'destroy']);
-//voir les produits par categorie
-Route::get('produit/{categorie_id}', [ProduitController::class, 'getProduitsByCategorie']);
+
 
 //ajouter Vente
 Route::post('vente/create', [VenteController::class, 'store']);
@@ -97,7 +84,7 @@ Route::get('client/detail/{id}', [ClientController::class, 'show']);
 //ajouter facture
 Route::post('facture/create', [FactureController::class, 'store']);
 //modifier  facture
- Route::put('facture/edit/{id}', [FactureController::class, 'update']);
+ Route::put('facture/edit/{facture}', [FactureController::class, 'update']);
 //supprimer  facture
 Route::delete('facture/supprimer/{id}', [FactureController::class, 'destroy']);
 //lister les factures
@@ -148,15 +135,14 @@ Route::get('categorie/detail/{id}', [CategorieController::class, 'show']);
  Route::get('achat/lister', [AchatController::class, 'index']);
  //afficher achat
  Route::get('achat/detail/{id}', [AchatController::class, 'show']);
+ //modifier employé
+Route::put('employe/edit/{user}', [AuthController::class, 'update']);
 
 });
 
 //MIDLEWARE PROPRIETAIRE
 
 Route::middleware(['auth:api','role_proprietaire'])->group(function() {
-
-//modifier employé
-Route::put('employe/edit/{user}', [AuthController::class, 'update']);
 //pour achiver employé
  Route::put('employe/archive/{user}', [AuthController::class, 'archiver']);
 
@@ -172,11 +158,14 @@ Route::get('employe/detail/{id}', [AuthController::class, 'show']);
 
 //MIDLEWARE EMPLOYE
 Route::middleware(['auth:api','role_employe'])->group(function() {  });
+//modifier mot de pass
 Route::post('passworde/{id}', [AuthController::class, 'updatepassword']);
 //lister les produits
 Route::get('produits/lister', [ProduitController::class, 'index']);
 //afficher un produit
 Route::get('produit/detail/{id}', [ProduitController::class, 'show']);
+//voir les produits par categorie
+Route::get('produit/{categorie_id}', [ProduitController::class, 'getProduitsByCategorie']);
 Route::post('whatsapp.userquincaillerie/{id}', [ClientController::class, 'redirigerWhatsApp']);
 
 

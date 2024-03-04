@@ -189,7 +189,7 @@ class PayementController extends Controller
      * Display the specified resource.
      */
 
-    public function store(Request $request, Vente $vente)
+    public function store(CreatePayementRequest $request, Vente $vente)
     {
         $historiques = Historiquevente::Where('vente_id', $vente->id)->get();
         if ($request->etat == 'comptant') {
@@ -233,7 +233,7 @@ class PayementController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(EditPayementRequest $request, $id)
     {
         $vente = Vente::find($id);
     

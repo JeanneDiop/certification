@@ -33,7 +33,8 @@ class AuthController extends Controller
     
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register']]);
+        $this->middleware('auth:api', ['except' => ['login','register','refresh']
+    ]);
     }
     /**
      * Get a JWT via given credentials.
@@ -97,6 +98,13 @@ class AuthController extends Controller
 
     public function updatepassword(Request $request, $id)
 {
+
+     // Valider les données de la requête
+     $validatedData = $request->validate([
+        'password' => 'required|min:8',
+    ], [
+        'password.required' => 'Le champ mot de passe est requis.',
+    ]);
     // Vérifier si l'utilisateur existe
     $user = User::find($id);
 
@@ -106,19 +114,6 @@ class AuthController extends Controller
             'status_message' => 'Utilisateur non trouvé.'
         ], 404);
     }
-
-    // // Validation du mot de passe
-    // $validator = Validator::make($request->all(), [
-    //     'password' => 'required|min:8|confirmed',
-    // ]);
-
-    // if ($validator->fails()) {
-    //     return response()->json([
-    //         'status_code' => 422,
-    //         'status_message' => 'Échec de validation.',
-    //         'errors' => $validator->errors(),
-    //     ], 422);
-    // }
 
     // Mettre à jour le mot de passe
     $user->password = Hash::make($request->password);
@@ -165,18 +160,36 @@ class AuthController extends Controller
  * )
  */
 
+    // public function login()
+    // {
+    //     $email=request(['email']);
+    //     $user=User::where('email',$email['email'])->first();    
+    //     $credentials = request(['email', 'password']);
+
+    //     if (! $token = auth()->attempt($credentials)) {
+    //         return response()->json(['error' => 'Unauthorized'], 401);
+    //     }
+
+    //     return $this->respondWithToken($token,$user);
+    // }
     public function login()
     {
         $email=request(['email']);
         $user=User::where('email',$email['email'])->first();    
         $credentials = request(['email', 'password']);
-
-        if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        return $this->respondWithToken($token,$user);
+    
+        if ($user->etat === 'actif') {
+            $credentials = request(['email', 'password']);
+    
+            if (! $token = auth()->attempt($credentials)) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+            return $this->respondWithToken($token, $user);
+        } else {
+            return response()->json(['error' => 'Votre compte est inactif, vous ne pouvez pas vous connecter'], 403);
+        }  
     }
+    
 
     /**
      * Get the authenticated User.
@@ -233,10 +246,10 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    // public function refresh()
-    // {
-    //     return $this->respondWithToken(auth()->refresh());
-    // }
+    public function refresh()
+    {
+        return response()->json(auth()->refresh());
+    }
 
     /**
      * Get the token array structure.
@@ -568,8 +581,10 @@ public function show(string $id)
 public function update(EditUserRequest $request, User $user)
 {
     try {
-        if (auth()->user()->role_id == 1) {
-            // L'administrateur (role_id égal à 1) a le droit de modifier tous les comptes
+        $userRole = auth()->user()->role_id;
+
+        if ($userRole == 1 || $userRole == 2) {
+            // L'administrateur et le proprietaire (role_id égal à 1 et role_id egal à 2) auront le droit de modifier tous les comptes
             $user->nom = $request->nom;
             $user->prenom = $request->prenom;
             $user->email = $request->email;

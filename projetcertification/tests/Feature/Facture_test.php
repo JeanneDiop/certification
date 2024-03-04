@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Facture;
+
+use App\Models\Payement;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -14,101 +16,127 @@ class Facture_test extends TestCase
      * A basic feature test example.
      */
     public function test_facture(): void
-        {
-            // Allow the user to log in
-            $user = User::factory()->create([
-                'telephone' => '+221778906750',
-            ]);
-            $this->actingAs($user);
+    {
+        // Allow the user to log in
+        $user = User::factory()->create([
+            'telephone' => '+221709660506',
+        ]);
+        $this->actingAs($user);
+    
+        $payement = Payement::factory()->create(); // Utilise make() au lieu de create()
         
-            // Create a client (if needed)
-            $client = Client::factory()->create([
-                'telephone' => '+221767007000',
-                'code_client' => 'T00026'
-            ]);
-        
-            // Create a sale (Vente) with a factory, specifying the client_id, user_id, and other necessary fields
-            $facture = [
-                'user_id' => $user->id,
-                'client_id' => $client->id,
-                'montant_total' => 0, // Adjust this according to your logic
-                'produit' =>  [
-                    [ "id" => 2, "quantite" => 12],
-                    [ "id" => 3, "quantite" => 14]
-                ],
-            ];
-        
-            // Send an HTTP POST request to the registration route (api/Vente/create) with the sale data
-            $response = $this->json('POST', 'api/facture/create', $facture);
-        
-            // Assert the response status
-            $response->assertStatus(200); // 200 indicates that the creation was successful
-        }
+        // Create a sale (Vente) with a factory, specifying the client_id, user_id, and other necessary fields
+        $facture = [
+            'user_id' => $user->id,
+            'payement_id' => $payement->id,
+            'montantVerser' => 3457
+        ];
+    
+        // Send an HTTP POST request to the registration route (api/Vente/create) with the sale data
+        $response = $this->json('POST', 'api/facture/create', $facture);
+    
+        // Assert the response status
+        $response->assertStatus(200); // 200 indicates that the creation was successful
+    }
 
-        public function test_modifier_facture(): void
+    public function test_modifier_facture()
+    {
+        // Permettre à l'utilisateur de se connecter
+        $user = User::factory()->create([
+            'telephone' => '+221751630024',
+        ]);
+        $this->actingAs($user);
+    
+    
+        // Créer un paiementpublic function test_modifier_facture()
 {
-    // Autoriser l'utilisateur à se connecter
+    // Permettre à l'utilisateur de se connecter
     $user = User::factory()->create([
-        'telephone' => '+221764775656',
+        'telephone' => '+221775332124',
     ]);
     $this->actingAs($user);
 
-    // Créer un client (si nécessaire)
-    $client = Client::factory()->create([
-        'telephone' => '+221770112525',
-        'code_client'=>'K70013'
-    ]);
+    // Créer un paiement
+    $payement = Payement::factory()->create();
 
-    // Créer une vente (Vente) avec une factory
+    // Créer une facture à modifier
     $facture = Facture::factory()->create([
-        'user_id' => $user->id,
-        'client_id' => $client->id,
-        'montant_total' => 180, // Ajuster selon votre logique
+        'payement_id' => $payement->id,
+        'montantVerser' => 4557,
     ]);
 
-    // Modifier les données de vente
-    $nouveauMontantTotal = 100; // Supposons que le nouveau montant total est 100
-    $nouveauxProduits = [
-        [ "id" => 2, "quantite" => 5], // Mettre à jour le produit existant ou ajouter de nouveaux produits
-        [ "id" => 3, "quantite" => 8]
-    ];
+    // Nouvelles données pour la facture mise à jour
+    $newMontantVerser = 5000;
 
-    // Envoyer une requête HTTP PUT à la route de modification (api/Vente/update/{id}) avec les données de vente mises à jour
-    $response = $this->json('PUT', "api/facture/edit/{$facture->id}", [
-        'user_id' => $user->id,
-        'client_id' => $client->id,
-        'code_client' => $client->code_client, // Inclure le code client dans la requête de modification
-        'montant_total' => $nouveauMontantTotal,
-        'produit' => $nouveauxProduits,
+    // Envoyer une requête HTTP PUT pour mettre à jour la facture
+    $response = $this->putJson("api/facture/edit/{$facture->id}", [
+        'montantVerser' => $newMontantVerser,
+        'payement_id' => $payement->id,
     ]);
 
-    // Vérifier que le statut de la réponse est un succès
-    $response->assertStatus(200); // En supposant qu'une mise à jour réussie renvoie le statut 200
+    // Vérifier le statut de la réponse
+    $response->assertStatus(200); // 200 indique que la mise à jour a réussi
+
+    // Récupérer la facture mise à jour depuis la base de données
+    $factureUpdated = Facture::find($facture->id);
+
+    // Vérifier que la facture a été mise à jour dans la base de données avec le nouveau montant
+    $this->assertEquals($newMontantVerser, $factureUpdated->montantVerser);
 }
+
+        $payement = Payement::factory()->create();
+    
+        // Créer une facture à modifier
+        $facture = Facture::factory()->create([
+            'payement_id' => $payement->id,
+            'montantVerser' => 4557,
+        ]);
+    
+        // Nouvelles données pour la facture mise à jour
+        $newMontantVerser = 5000;
+    
+        // Envoyer une requête HTTP PUT pour mettre à jour la facture
+        $response = $this->putJson("api/facture/edit/{$facture->id}", [
+            'montantVerser' => $newMontantVerser,
+            'payement_id' => $payement->id,
+        ]);
+    
+        // Vérifier le statut de la réponse
+        $response->assertStatus(200); // 200 indique que la mise à jour a réussi
+    
+        // Vérifier que la facture a été mise à jour dans la base de données
+        $this->assertDatabaseHas('factures', [
+            'id' => $facture->id,
+            'montantVerser' => $newMontantVerser,
+        ]);
+    }
+    
 
 public function test_listerfactures(): void 
 {
      $user = User::factory()->create([
-        'telephone' => '+221775920343',
+        'telephone' => '+221775920643',
      ]);
     
        $this->actingAs($user);
        $response=$this->json('GET', 'api/facture/lister');
       $response->assertStatus(200);
 }
+
 public function test_supprimefacture()
 {
     $user = User::factory()->create([
-        'telephone' => '+2217740014141',
+        'telephone' => '+22175623443',
      ]);
     $this->actingAs($user);
 
     $facture = Facture::factory()->create();
 
-        $response = $this->json('DELETE', url("api/facture/supprimer/{$facture->id}"));
+    $response = $this->json('DELETE', url("api/facture/supprimer/{$facture->id}"));
 
-        $response->assertStatus(200);
+    $response->assertStatus(200);
 
-        $this->assertDatabaseMissing('ventes', ['id' => $facture->id]);
+        $this->assertDatabaseMissing('factures', ['id' => $facture->id]);
 }
+
 }

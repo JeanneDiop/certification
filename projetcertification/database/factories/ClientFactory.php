@@ -16,12 +16,11 @@ class ClientFactory extends Factory
      */
     public function definition(): array
     {
-       
         return [
             'nom' => $this->faker->word,
             'prenom' => $this->faker->word,
-            'code_client' => 'T00043',
-            'telephone' => '+221769852450',
+            'code_client' => $this->faker->unique()->regexify('G\d{5}'),
+            'telephone' => '+221' . substr($this->faker->phoneNumber, 1),
             'adresse' => $this->faker->word,
         ];
     }

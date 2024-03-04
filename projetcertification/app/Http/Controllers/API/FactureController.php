@@ -107,7 +107,7 @@ class FactureController extends Controller
             "client" => $client,
             'facture'=>$facture,
             'vente'=>$vente,
-            'payerment'=>$payement,
+            'payement'=>$payement,
             'produit'=>$produits
         ]);
     }
@@ -126,11 +126,17 @@ class FactureController extends Controller
     public function update(EditFactureRequest $request, Facture $facture)
     {
         try {
-            $facture = Facture::find($facture);
-            $facture->numerofacture = $request->numerofacture;
             $facture->payement_id = $request->payement_id;
+            $facture->montantVerser = $request->montantVerser;
+            
+            if ($request->has('numerofacture')) {
+                $facture->numerofacture = $request->numerofacture;
+            } else {
+                $facture->numerofacture = $this->generernumerofacture();
+            }
+    
             $facture->update();
-
+    
             return response()->json([
                 'status_code' => 200,
                 'status_message' => 'facture a été modifié',
@@ -144,21 +150,22 @@ class FactureController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Facture $facture)
+    public function destroy(string $id)
     {
-        try{
-            $facture= Facture::findOrFail($facture);
+        try {
+            $facture = Facture::findOrFail($id);
 
             $facture->delete();
 
             return response()->json([
-              'status_code' => 200,
-              'status_message' => 'facture a été bien supprimer',
-              'data' => $facture
+                'status_code' => 200,
+                'status_message' => 'facture a été bien supprimer',
+                'data' => $facture
             ]);
-          } catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json($e);
-          }
-
+        }
     }
+
+
 }

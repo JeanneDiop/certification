@@ -2188,7 +2188,7 @@
                 ]
             }
         },
-        "": {
+        "/api/historiquevente/{vente->id}": {
             "get": {
                 "summary": "historiquevente/id",
                 "description": "",
@@ -2396,7 +2396,7 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
                                 "type": "object",
                                 "properties": {
@@ -2477,7 +2477,7 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "application/x-www-form-urlencoded": {
+                        "application/json": {
                             "schema": {
                                 "type": "object",
                                 "properties": {

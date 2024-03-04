@@ -50,14 +50,14 @@ class Vente_Test extends TestCase
 {
     // Allow the user to log in
     $user = User::factory()->create([
-        'telephone' => '+221778906750',
+        'telephone' => '+221700906750',
     ]);
     $this->actingAs($user);
 
     // Create a client (if needed)
     $client = Client::factory()->create([
-        'telephone' => '+221767007000',
-        'code_client' => 'T00026'
+        'telephone' => '+221707017000',
+        'code_client' => 'T00316'
     ]);
 
     // Create a sale (Vente) with a factory, specifying the client_id, user_id, and other necessary fields
@@ -66,8 +66,8 @@ class Vente_Test extends TestCase
         'client_id' => $client->id,
         'montant_total' => 0, // Adjust this according to your logic
         'produit' =>  [
-            [ "id" => 2, "quantite" => 12],
-            [ "id" => 3, "quantite" => 14]
+            [ "id" => 15, "quantite" => 12],
+            [ "id" => 16, "quantite" => 14]
         ],
     ];
 
@@ -83,14 +83,14 @@ public function test_modifier_vente(): void
 {
     // Autoriser l'utilisateur à se connecter
     $user = User::factory()->create([
-        'telephone' => '+221764775656',
+        'telephone' => '+221704771856',
     ]);
     $this->actingAs($user);
 
     // Créer un client (si nécessaire)
     $client = Client::factory()->create([
-        'telephone' => '+221770112525',
-        'code_client'=>'K70013'
+        'telephone' => '+221770230525',
+        'code_client'=>'S00593'
     ]);
 
     // Créer une vente (Vente) avec une factory
@@ -103,8 +103,8 @@ public function test_modifier_vente(): void
     // Modifier les données de vente
     $nouveauMontantTotal = 100; // Supposons que le nouveau montant total est 100
     $nouveauxProduits = [
-        [ "id" => 2, "quantite" => 5], // Mettre à jour le produit existant ou ajouter de nouveaux produits
-        [ "id" => 3, "quantite" => 8]
+        [ "id" => 15, "quantite" => 1], // Mettre à jour le produit existant ou ajouter de nouveaux produits
+        [ "id" => 16, "quantite" => 2]
     ];
 
     // Envoyer une requête HTTP PUT à la route de modification (api/Vente/update/{id}) avec les données de vente mises à jour
@@ -123,7 +123,7 @@ public function test_modifier_vente(): void
 public function test_listerventes(): void 
 {
      $user = User::factory()->create([
-        'telephone' => '+221775920343',
+        'telephone' => '+221705920343',
      ]);
     
        $this->actingAs($user);
@@ -134,7 +134,7 @@ public function test_listerventes(): void
 public function test_supprimevente()
 {
     $user = User::factory()->create([
-        'telephone' => '+2217740014141',
+        'telephone' => '+221764034141',
      ]);
     $this->actingAs($user);
 
